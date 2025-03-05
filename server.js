@@ -17,6 +17,11 @@ app.put("/item/:id", (req, res) => {
   res.json(`${id} ${title}`);
 });
 
+app.delete("/item/:id", (req, res) => {
+  const { id } = req.params;
+  res.json(id);
+});
+
 app.listen(3000, () => {
   console.log("app running");
 });
