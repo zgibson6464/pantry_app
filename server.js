@@ -1,25 +1,39 @@
 const express = require("express");
+const { prismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
 const app = express();
 app.use(express.json());
 
 app.get("/", async (req, res) => {
-  res.json("hello world");
+  const items = await prisma.item.findMany();
+  res.json(items);
 });
 
-app.post("/item", (req, res) => {
-  const { name } = req.body;
-  res.json(title);
+app.post("/item", async (req, res) => {
+  const { title } = req.body;
+  const item = await prisma.item.create({
+    data: { title },
+  });
+  res.json(item);
 });
 
-app.put("/item/:id", (req, res) => {
+app.put("/item/:id", async (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
-  res.json(`${id} ${title}`);
+  const { title, quantity } = req.body;
+  const item = await prisma.item.update({
+    where: { id: parseInt(id) },
+    data: { title, quantity },
+  });
+  res.json(item);
 });
 
-app.delete("/item/:id", (req, res) => {
+app.delete("/item/:id", async (req, res) => {
   const { id } = req.params;
-  res.json(id);
+  await prisma.item.delete({
+    where: { id: parseInt(id) },
+  });
+  res.json("item deleted");
 });
 
 app.listen(3000, () => {
