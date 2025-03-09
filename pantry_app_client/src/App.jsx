@@ -39,8 +39,12 @@ function App() {
 
   // need to add item removal functionality via deleteItem
   const deleteItem = async (id) => {
-    await axios.delete(`${HOST}/item/${id}`);
-    await fetchItems();
+    try {
+      await axios.delete(`${HOST}/item/${id}`);
+      await fetchItems();
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
   };
 
   // need to add mapping functionality to display each item and its quantity with the added function of toggling the quantity
