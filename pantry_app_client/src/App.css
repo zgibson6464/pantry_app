@@ -40,3 +40,14 @@
 .read-the-docs {
   color: #888;
 }
+
+h1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional shadow */
+  z-index: 1000; /* Ensure it's above other content */
+}

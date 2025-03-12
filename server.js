@@ -13,20 +13,20 @@ app.get("/items", async (req, res) => {
 });
 
 app.post("/item", async (req, res) => {
-  const { title } = req.body;
-  console.log("Received item:", title); // Debug log
+  const { title, quantity } = req.body;
+  console.log("Received item:", title, quantity); // Debug log
   const item = await prisma.item.create({
-    data: { title, quantity: 1 },
+    data: { title, quantity },
   });
   res.json(item);
 });
 
-app.put("/item/:id", async (req, res) => {
+app.put("/item/:id/quantity", async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body;
+  const { change } = req.body;
   const item = await prisma.item.update({
     where: { id: parseInt(id) },
-    data: { title },
+    data: { quantity: { increment: change } },
   });
   res.json(item);
 });
