@@ -14,7 +14,7 @@ app.get("/items", async (req, res) => {
 
 app.post("/item", async (req, res) => {
   const { title, quantity } = req.body;
-  console.log("Received item:", title, quantity); // Debug log
+  console.log("Received item:", title, quantity);
   const item = await prisma.item.create({
     data: { title, quantity },
   });
