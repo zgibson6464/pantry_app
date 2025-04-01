@@ -3,6 +3,7 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const cors = require("cors");
 const itemRoutes = require("./routes/itemRoutes"); // Import item routes
+const userRoutes = require("./routes/userRoutes"); // Import user routes
 
 const prisma = new PrismaClient();
 const app = express();
@@ -12,6 +13,7 @@ app.use(cors());
 
 // Use item routes
 app.use("/items", itemRoutes);
+app.use("/user", userRoutes); // Use user routes
 
 app.listen(3000, () => {
   console.log("app running");
