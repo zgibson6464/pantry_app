@@ -9,10 +9,12 @@ export const fetchItems = async () => {
   return response.data.sort((a, b) => a.id - b.id);
 };
 
-export const addItem = async (title, quantity) => {
-  await axios.post(`${HOST}/item`, {
+export const addItem = async (title, quantity, userId) => {
+  const token = localStorage.getItem("token");
+  await axios.post(`${HOST}/items`, {
     title,
     quantity: parseInt(quantity) || 1,
+    userId,
   });
 };
 
@@ -26,10 +28,18 @@ export const deleteItem = async (id) => {
 
 // User functionality
 
-export const registerUser = async (username, password) => {
+export const registerUser = async (username, email, password) => {
   await axios.post(`${HOST}/user/register`, {
     username,
     email,
     password,
   });
+};
+
+export const loginUser = async (email, password) => {
+  const response = await axios.post(`${HOST}/user/login`, {
+    email,
+    password,
+  });
+  return response.data.token;
 };

@@ -10,11 +10,16 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { title, quantity } = req.body;
-  const item = await prisma.item.create({
-    data: { title, quantity },
-  });
-  res.json(item);
+  const { title, quantity, userId } = req.body;
+  try {
+    const item = await prisma.item.create({
+      data: { title, quantity: parseInt(quantity), userId: parseInt(userId) },
+    });
+    res.json(item);
+  } catch (error) {
+    console.error("Error adding item:", error);
+    res.status(500).json({ error: "Failed to add item" });
+  }
 });
 
 router.put("/:id/quantity", async (req, res) => {
