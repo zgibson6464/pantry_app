@@ -7,7 +7,7 @@ import {
   registerUser,
   loginUser,
 } from "./api"; // Import API functions
-import "./App.css";
+import "./styles.css";
 
 function App() {
   const [state, setState] = useState([]);
