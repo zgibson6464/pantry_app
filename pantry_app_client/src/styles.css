@@ -4,13 +4,36 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  color: rgba(255, 255, 255, 0.87); /* Ensure text is visible in dark mode */
+  background-color: #242424; /* Dark mode by default */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Removed padding to avoid white gaps */
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column; /* Ensure content stacks properly */
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  width: 100%; /* Ensure it spans the full width */
+  height: 100%; /* Ensure it spans the full height */
+  background-color: #242424; /* Set dark background for the entire page */
+  color: rgba(255, 255, 255, 0.87); /* Ensure text is visible */
+}
+
+#root {
+  width: 100%; /* Ensure it spans the full width */
+  height: 100%; /* Ensure it spans the full height */
+  margin: 0;
+  padding: 0; /* Removed padding to avoid white gaps */
+  text-align: center;
+  background-color: #242424; /* Ensure root container inherits dark background */
+  color: rgba(255, 255, 255, 0.87); /* Ensure text is visible */
 }
 
 a {
@@ -22,17 +45,11 @@ a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  text-align: center; /* Center the text horizontally */
+  position: static; /* Remove absolute positioning to avoid conflicts */
 }
 
 button {
@@ -57,7 +74,7 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-color: #343a40;
   }
   a:hover {
     color: #747bff;
@@ -65,12 +82,6 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
 }
 
 .logo {
@@ -132,13 +143,30 @@ button:focus-visible {
   cursor: pointer;
 }
 
-h1 {
+.navbar {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  justify-content: center; /* Center all items horizontally */
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  padding: 10px 0;
-  text-align: center;
+  padding: 10px 20px;
+  background-color: #343a40; /* Dark background */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
+}
+
+.navbar h1 {
+  color: white; /* Ensure the text is visible */
+  margin: 0 auto; /* Center the h1 horizontally */
+  font-size: 3rem; /* Adjust font size for the navbar */
+  line-height: 1; /* Ensure proper vertical alignment */
+}
+
+.navbar .menu-items {
+  position: absolute; /* Position menu items independently */
+  right: 20px; /* Align menu items to the right */
+  display: flex; /* Ensure items are laid out horizontally */
+  align-items: center; /* Align items vertically */
 }

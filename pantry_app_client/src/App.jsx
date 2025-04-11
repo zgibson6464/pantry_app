@@ -89,65 +89,61 @@ function App() {
     </div>
   ));
 
-  return (
+  return !token ? (
     <>
-      {!token ? (
-        <>
-          <form className="form" onSubmit={handleRegister}>
-            <h2>Register</h2>
-            <input
-              placeholder="Username"
-              value={registerUsername}
-              onChange={(e) => setRegisterUsername(e.target.value)}
-            />
-            <input
-              placeholder="Email"
-              value={registerEmail}
-              onChange={(e) => setRegisterEmail(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={registerPassword}
-              onChange={(e) => setRegisterPassword(e.target.value)}
-            />
-            <button type="submit">Register</button>
-          </form>
+      <form className="form" onSubmit={handleRegister}>
+        <h2>Register</h2>
+        <input
+          placeholder="Username"
+          value={registerUsername}
+          onChange={(e) => setRegisterUsername(e.target.value)}
+        />
+        <input
+          placeholder="Email"
+          value={registerEmail}
+          onChange={(e) => setRegisterEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={registerPassword}
+          onChange={(e) => setRegisterPassword(e.target.value)}
+        />
+        <button type="submit">Register</button>
+      </form>
 
-          <form className="form" onSubmit={handleLogin}>
-            <h2>Login</h2>
-            <input
-              placeholder="Email"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-            />
-            <button type="submit">Login</button>
-          </form>
-        </>
-      ) : (
-        <>
-          <form className="form" onSubmit={addPantryItem}>
-            <input
-              placeholder="Enter description"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-            />
-            <input
-              placeholder="Enter quantity"
-              value={inputAmount}
-              onChange={(e) => setInputAmount(e.target.value)}
-            />
-            <button type="submit">Add Item</button>
-          </form>
-          {items}
-        </>
-      )}
+      <form className="form" onSubmit={handleLogin}>
+        <h2>Login</h2>
+        <input
+          placeholder="Email"
+          value={loginEmail}
+          onChange={(e) => setLoginEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={loginPassword}
+          onChange={(e) => setLoginPassword(e.target.value)}
+        />
+        <button type="submit">Login</button>
+      </form>
+    </>
+  ) : (
+    <>
+      <form className="form" onSubmit={addPantryItem}>
+        <input
+          placeholder="Enter description"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <input
+          placeholder="Enter quantity"
+          value={inputAmount}
+          onChange={(e) => setInputAmount(e.target.value)}
+        />
+        <button type="submit">Add Item</button>
+      </form>
+      {items}
     </>
   );
 }
