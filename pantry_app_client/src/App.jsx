@@ -65,6 +65,11 @@ function App() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove token from local storage
+    setToken(""); // Clear token state
+  };
+
   const items = state.map((item) => (
     <div key={item.id}>
       {item.title} - Quantity: {item.quantity}
