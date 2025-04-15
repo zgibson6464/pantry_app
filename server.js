@@ -11,8 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Use item routes
-app.use("/items", itemRoutes);
+app.use("/items", itemRoutes); // Use item routes
 app.use("/user", userRoutes); // Use user routes
 
 app.listen(3000, () => {

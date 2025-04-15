@@ -2,17 +2,15 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const prisma = new PrismaClient();
 const router = express.Router();
-const SECRET_KEY = "key";
 
 // Register a new user
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
-
   const hashedPassword = await bcrypt.hash(password, 10);
-
   try {
     const user = await prisma.user.create({
       data: {
@@ -21,7 +19,9 @@ router.post("/register", async (req, res) => {
         password: hashedPassword,
       },
     });
-    res.json(user);
+    //Generate a Json Web Token (JWT)
+    const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY);
+    res.json({ message: "Registration successful", token });
   } catch (error) {
     res.status(400).json({ error: "User registration failed" });
   }
@@ -46,7 +46,7 @@ router.post("/login", async (req, res) => {
     }
 
     //Generate a Json Web Token (JWT)
-    const token = jwt.sign({ userId: user.id }, SECRET_KEY);
+    const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY);
 
     res.json({ message: "login successful", token });
   } catch (error) {
