@@ -7,12 +7,12 @@ function RegisterPage() {
   const [email, setEmail] = useState(""); // Add state for email
   const [password, setPassword] = useState(""); // Add state for password
   const [username, setUsername] = useState(""); // Add state for username
+
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
       const token = await registerUser(username, email, password);
       localStorage.setItem("token", token);
-      setToken(token);
       alert("User registered successfully! Redirecting to Pantry...");
       setUsername("");
       setEmail("");
