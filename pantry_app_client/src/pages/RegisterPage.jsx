@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../api"; // Import registerUser function
 
-export const RegisterPage = () => {
+function RegisterPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState(""); // Add state for email
   const [password, setPassword] = useState(""); // Add state for password
@@ -50,6 +50,11 @@ export const RegisterPage = () => {
         />
         <button type="submit">Register</button>
       </form>
+      <button onClick={() => navigate("/login")}>
+        Have an account? Login here.
+      </button>
     </div>
   );
-};
+}
+
+export default RegisterPage;

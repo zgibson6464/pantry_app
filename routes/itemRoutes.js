@@ -1,16 +1,41 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const items = await prisma.item.findMany();
-  res.json(items);
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token === null) return res.sendStatus(401);
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+}
+
+router.get("/", authenticateToken, async (req, res) => {
+  try {
+    const items = await prisma.item.findMany({
+      where: { userId: req.user.userId },
+    });
+    res.json(items);
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    res.status(500).json({ error: "Failed to fetch items" });
+  }
 });
 
-router.post("/", async (req, res) => {
-  const { title, quantity, userId } = req.body;
+router.post("/", authenticateToken, async (req, res) => {
+  const { title, quantity } = req.body;
+  const userId = req.user.userId;
+  if (!title || !userId) {
+    return res.status(400).json({ error: "Title and userId are required" });
+  }
+
   try {
     const item = await prisma.item.create({
       data: { title, quantity: parseInt(quantity), userId: parseInt(userId) },
@@ -22,14 +47,19 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id/quantity", async (req, res) => {
+router.put("/:id/quantity", authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { change } = req.body;
-  const item = await prisma.item.update({
-    where: { id: parseInt(id) },
-    data: { quantity: { increment: change } },
-  });
-  res.json(item);
+  try {
+    const item = await prisma.item.update({
+      where: { id: parseInt(id) },
+      data: { quantity: { increment: change } },
+    });
+    res.json(item);
+  } catch (error) {
+    console.error("Error updating item quantity:", error);
+    res.status(500).json({ error: "Failed to update item quantity" });
+  }
 });
 
 router.delete("/:id", async (req, res) => {
