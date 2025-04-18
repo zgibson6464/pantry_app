@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../api"; // Import loginUser function
+import { loginUser } from "../api"; // Import loginUser function to be used in handleLogin
 
-export function LoginPage() {
+function LoginPage({ setToken }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState(""); // Add state for email
   const [password, setPassword] = useState(""); // Add state for password
 
+  // Function to handle login, imported from api.js
+  // This function will be called when the user submits the login form
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const token = await loginUser(email, password); // Call loginUser API
-      localStorage.setItem("token", token); // Store token in localStorage
+      if (!token) {
+        throw new Error("Invalid login"); // Handle invalid login
+      }
+      localStorage.setItem("token", token);
+      setToken(setToken); // Store token in localStorage
       alert("Login successful!");
       setEmail(""); // Clear email input
       setPassword(""); // Clear password input
@@ -41,7 +47,11 @@ export function LoginPage() {
         />
         <button type="submit">Login</button>
       </form>
-      <button onClick={() => navigate("/register")}>Register</button>
+      <button onClick={() => navigate("/register")}>
+        Dont have an account? Register here.
+      </button>
     </div>
   );
 }
+
+export default LoginPage;
