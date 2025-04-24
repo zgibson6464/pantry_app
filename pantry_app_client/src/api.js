@@ -1,3 +1,5 @@
+// File: api.js
+// Description: This file contains the API functions for user registration, login, and item management in the pantry app connecting the client to the server using axios.
 import axios from "axios";
 
 const HOST = "http://localhost:3000";

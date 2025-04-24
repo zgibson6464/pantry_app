@@ -1,3 +1,4 @@
+// description: this file contains the Pantry component, which displays the user's pantry items, allows adding new items, updating quantities, and deleting items. It uses the fetchItems, addItem, updateQuantity, and deleteItem functions from the API module to interact with the backend.
 import React, { useState, useEffect } from "react";
 import { fetchItems, addItem, updateQuantity, deleteItem } from "../api"; // Import API functions
 

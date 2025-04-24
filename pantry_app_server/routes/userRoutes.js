@@ -1,3 +1,5 @@
+// File: userRoutes.js
+// Description: This file contains the routes for user registration and login after being authenticated and submitted under the /user path.
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");

@@ -1,3 +1,4 @@
+// description: This file contains the NavBar component, which is the navigation bar for the application. It contains the logout button that calls the handleLogout function from the API module when clicked.
 import React from "react";
 import { Link } from "react-router-dom";
 import { Nav } from "react-bootstrap"; // Import Nav from react-bootstrap

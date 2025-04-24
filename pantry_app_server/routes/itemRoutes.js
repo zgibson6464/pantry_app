@@ -1,3 +1,5 @@
+// File: userRoutes.js
+// Description: this file contains the routes for item management after being authenticated and submitted under the /item path.
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const jwt = require("jsonwebtoken");

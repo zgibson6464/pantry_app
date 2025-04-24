@@ -1,3 +1,4 @@
+// description: This file contains the the LoginPage component, which allows users to login to their account and handles the login process by calling the loginUser function from the API module.
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api"; // Import loginUser function to be used in handleLogin

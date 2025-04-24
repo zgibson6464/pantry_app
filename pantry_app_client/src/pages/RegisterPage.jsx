@@ -1,3 +1,4 @@
+// description: This file contains the RegisterPage component, which allows users to register for a new account and handles the registration process by calling the registerUser function from the API module.
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../api"; // Import registerUser function
