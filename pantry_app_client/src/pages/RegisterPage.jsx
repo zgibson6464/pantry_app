@@ -12,6 +12,10 @@ function RegisterPage() {
     e.preventDefault();
     try {
       const token = await registerUser(username, email, password);
+      if (!token) {
+        alert("Registration failed. Please try again.");
+        return; // Handle registration error
+      }
       localStorage.setItem("token", token);
       alert("User registered successfully! Redirecting to Pantry...");
       setUsername("");
@@ -19,7 +23,7 @@ function RegisterPage() {
       setPassword("");
       navigate("/");
     } catch (error) {
-      alert("Registration failed");
+      console.error("Registration error:", error);
     }
   };
 

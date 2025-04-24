@@ -56,7 +56,6 @@ export const registerUser = async (username, email, password) => {
     return response.data.token;
   } catch (error) {
     console.error("Registration error:", error);
-    alert("Registration failed");
   }
 };
 
