@@ -1,7 +1,9 @@
 Pantry App - An inventory management app to keep track of pantry items.
+Register or log in to your own saved pantry where you can add items and their quantities and adjust as theyre used or purchased.
 
 Features:
 
+- Login and Register your own account
 - Add, update, and delete items
 - Adjust item quantities
 - Persistent data storage with PostgreSQL & Prisma
