@@ -21,6 +21,7 @@ Installation
   Requires Node.js & PostgreSQL
   in bash terminal run:
   """
+  cd ../pantry_app_server
   npm install
   """
 
