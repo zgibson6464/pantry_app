@@ -14,7 +14,7 @@ export const fetchItems = async () => {
   return response.data.sort((a, b) => a.id - b.id);
 };
 
-export const addItem = async (title, quantity, userId) => {
+export const addItem = async (title, quantity) => {
   const token = localStorage.getItem("token");
   await axios.post(
     `${HOST}/items`,

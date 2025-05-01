@@ -9,6 +9,26 @@ Features:
 - Persistent data storage with PostgreSQL & Prisma
 - Modularized backend and frontend code for better maintainability
 
+Technologies Used:
+Backend:
+
+- Node.js: Cross platform, open-source JavaScript runtime environment for building the backend server.
+- Express.js: back-end web application framework for building RESTful APIs with Node.js
+- Prisma: ORM designed for Node.js for database management
+- PostgreSQL: Relational Database for data storage
+- Nodemon: Development tool used for automatic server restarting on file changes.
+- bcrypt: Library for password hashing
+- jsonwebtoken: Library for authentication using JSON Web Tokens
+- dotenv: Library for managing environment variables, storing them so they are not hardcoded into the application.
+
+Frontend:
+
+- React.js: Javascript library for building the user interface
+- Vite: Build tool for fast development and bundling
+- Axios: Promise based HTTP client for making REST API calls
+- Bootstrap: CSS framework for styling and responsive design
+- React Router: Library for handling routing in the React application
+
 ================================================
 Installation
 
