@@ -3,35 +3,36 @@ import React, { useState, useEffect } from "react";
 import { fetchItems, addItem, updateQuantity, deleteItem } from "../api"; // Import API functions
 
 function Pantry() {
-  const [state, setState] = useState([]);
+  const [itemState, setItemState] = useState([]);
+  const [cardState, setCardState] = useState([]);
   const [input, setInput] = useState("");
   const [inputAmount, setInputAmount] = useState("");
   const [token, setToken] = useState(localStorage.getItem("token") || "");
 
-  // utilizes the fetchItems function to get the items from the API and set the state when the component mounts
+  // utilizes the fetchItems function to get the items from the API and set the itemState when the component mounts
   useEffect(() => {
     if (token) {
-      fetchItems().then(setState);
+      fetchItems().then(setItemState);
     }
   }, [token]);
 
-  // function to add an item to the pantry, it takes the input and inputAmount from the state and calls the addItem function from the API
-  // then fetches the items again to update the state
+  // function to add an item to the pantry, it takes the input and inputAmount from the itemState and calls the addItem function from the API
+  // then fetches the items again to update the itemState
   const addPantryItem = async (e) => {
     e.preventDefault();
     await addItem(input, inputAmount);
     const items = await fetchItems();
-    setState(items);
+    setItemState(items);
     setInput("");
     setInputAmount("");
   };
 
   // function to update the quantity of an item, it takes the id and change as parameters and calls the updateQuantity function from the API
-  // then updates the state with the new quantity
+  // then updates the itemState with the new quantity
   const handleUpdateQuantity = async (id, change) => {
     try {
       await updateQuantity(id, change);
-      setState((prevState) =>
+      setItemState((prevState) =>
         prevState.map((item) =>
           item.id === id ? { ...item, quantity: item.quantity + change } : item
         )
@@ -42,7 +43,27 @@ function Pantry() {
     }
   };
 
-  const items = state.map((item) => (
+  const cards = itemState.map((card) => (
+    <>
+      {" "}
+      <div key={card.id}>
+        {card.name}
+        <button
+          style={{ textDecoration: "underline" }}
+          onClick={async () => {
+            await deleteCard(card.id);
+            const cards = await fetchCards();
+            setCardState(cards);
+          }}
+        >
+          Remove
+        </button>
+      </div>
+      <div> {items} </div>
+    </>
+  ));
+
+  const items = itemState.map((item) => (
     <div key={item.id}>
       {item.title} - Quantity: {item.quantity}
       <button onClick={() => handleUpdateQuantity(item.id, 1)}> + </button>
@@ -58,7 +79,7 @@ function Pantry() {
         onClick={async () => {
           await deleteItem(item.id);
           const items = await fetchItems();
-          setState(items);
+          setItemState(items);
         }}
       >
         Remove
@@ -81,7 +102,7 @@ function Pantry() {
         />
         <button type="submit">Add Item</button>
       </form>
-      {items}
+      {cards}
     </>
   );
 }

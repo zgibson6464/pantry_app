@@ -18,13 +18,21 @@ model User {
   username String
   email    String @unique
   password String
-  items    Item[]
+  cards    Card[]
 }
 
 model Item {
   id       Int    @id @default(autoincrement())
   title    String
   quantity Int
-  userId   Int
-  user     User   @relation(fields: [userId], references: [id])
+  cardId   Int
+  card     Card @relation(fields: [cardId], references: [id])
+}
+
+model Card {
+  id Int @id @default(autoincrement())
+  name String
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  items Item[]
 }
