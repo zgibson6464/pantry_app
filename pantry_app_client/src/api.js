@@ -29,6 +29,8 @@ export const addItem = async (title, quantity, userId) => {
     {
       title,
       quantity: parseInt(quantity) || 1,
+      userId,
+      type,
     },
     {
       headers: { Authorization: `Bearer ${token}` },

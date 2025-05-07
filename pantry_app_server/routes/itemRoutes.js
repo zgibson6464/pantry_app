@@ -32,15 +32,22 @@ router.get("/", authenticateToken, async (req, res) => {
 });
 
 router.post("/", authenticateToken, async (req, res) => {
-  const { title, quantity } = req.body;
+  const { title, type, quantity } = req.body;
   const userId = req.user.userId;
-  if (!title || !userId) {
-    return res.status(400).json({ error: "Title and userId are required" });
+  if (!title || !userId || !type) {
+    return res
+      .status(400)
+      .json({ error: "Title and userId and type are required" });
   }
 
   try {
     const item = await prisma.item.create({
-      data: { title, quantity: parseInt(quantity), userId: parseInt(userId) },
+      data: {
+        title,
+        type,
+        quantity: parseInt(quantity),
+        userId: parseInt(userId),
+      },
     });
     res.json(item);
   } catch (error) {
@@ -51,11 +58,11 @@ router.post("/", authenticateToken, async (req, res) => {
 
 router.put("/:id/quantity", authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { change } = req.body;
+  const { change, type } = req.body;
   try {
     const item = await prisma.item.update({
       where: { id: parseInt(id) },
-      data: { quantity: { increment: change } },
+      data: { quantity: { increment: change }, type },
     });
     res.json(item);
   } catch (error) {
