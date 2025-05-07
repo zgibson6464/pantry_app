@@ -7,6 +7,7 @@ function Pantry() {
   const [cardState, setCardState] = useState([]);
   const [input, setInput] = useState("");
   const [inputAmount, setInputAmount] = useState("");
+  const [inputType, setInputType] = useState("");
   const [token, setToken] = useState(localStorage.getItem("token") || "");
 
   // utilizes the fetchItems function to get the items from the API and set the itemState when the component mounts
@@ -20,7 +21,7 @@ function Pantry() {
   // then fetches the items again to update the itemState
   const addPantryItem = async (e) => {
     e.preventDefault();
-    await addItem(input, inputAmount);
+    await addItem(input, inputAmount, inputType);
     const items = await fetchItems();
     setItemState(items);
     setInput("");
@@ -100,6 +101,20 @@ function Pantry() {
           value={inputAmount}
           onChange={(e) => setInputAmount(e.target.value)}
         />
+        <select
+          value={inputType}
+          onChange={(e) => setInputType(e.target.value)}
+        >
+          <option value="meat">Meat</option>
+          <option value="vegetable">Vegetable</option>
+          <option value="fruit">Fruit</option>
+          <option value="dairy">Dairy</option>
+          <option value="grain">Grain</option>
+          <option value="snack">Snack</option>
+          <option value="beverage">Beverage</option>
+          <option value="condiment">Condiment</option>
+          <option value="spice">Spice</option>
+        </select>
         <button type="submit">Add Item</button>
       </form>
       {cards}
