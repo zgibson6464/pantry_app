@@ -3,13 +3,13 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   fetchItems,
-  addItem,
   updateQuantity,
   deleteItem,
   addCard,
   fetchCards,
   deleteCard,
 } from "../api"; // Import API functions
+import "../styles.css"; // Import styles
 
 function Pantry() {
   const Navigate = useNavigate();
@@ -22,14 +22,15 @@ function Pantry() {
 
   useEffect(() => {
     if (token) {
-      fetchCards().then(setCardState);
+      fetchCards().then((cards) => {
+        setCardState(cards);
+      });
     }
   }, [token]);
 
   useEffect(() => {
     if (token) {
       fetchItems().then((items) => {
-        console.log(items);
         setItemState(items);
       });
     }
@@ -96,7 +97,7 @@ function Pantry() {
   };
 
   const cards = cardState.map((card) => (
-    <Fragment key={card.id}>
+    <div key={card.id} className="card">
       <div>
         {card.name}
         <button
@@ -123,10 +124,8 @@ function Pantry() {
       >
         Add Item
       </button>
-      <div>
-        <HandleFilteredItems cardId={card.id} />
-      </div>
-    </Fragment>
+      <div>{HandleFilteredItems(card.id)}</div>
+    </div>
   )) || <p>No cards available</p>;
 
   return (
@@ -139,7 +138,7 @@ function Pantry() {
         />
         <button type="submit">Add Card</button>
       </form>
-      <div> {cards} </div>
+      <div className="card-container"> {cards} </div>
     </>
   );
 }

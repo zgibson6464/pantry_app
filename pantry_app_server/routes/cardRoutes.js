@@ -52,10 +52,18 @@ router.post("/", authenticateToken, async (req, res) => {
 // router.delete("/:id")
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  await prisma.card.delete({
-    where: { id: parseInt(id) },
-  });
-  res.json("Pantry deleted");
+  try {
+    await prisma.item.deleteMany({
+      where: { cardId: parseInt(id) },
+    });
+    await prisma.card.delete({
+      where: { id: parseInt(id) },
+    });
+    res.json("Pantry deleted");
+  } catch (error) {
+    console.error("Error deleting pantry:", error);
+    res.status(500).json({ error: "Failed to delete pantry" });
+  }
 });
 
 module.exports = router;
