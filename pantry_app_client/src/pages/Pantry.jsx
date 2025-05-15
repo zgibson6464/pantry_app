@@ -1,31 +1,55 @@
 // description: this file contains the Pantry component, which displays the user's pantry items, allows adding new items, updating quantities, and deleting items. It uses the fetchItems, addItem, updateQuantity, and deleteItem functions from the API module to interact with the backend.
-import React, { useState, useEffect } from "react";
-import { fetchItems, addItem, updateQuantity, deleteItem } from "../api"; // Import API functions
+import React, { useState, useEffect, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  fetchItems,
+  addItem,
+  updateQuantity,
+  deleteItem,
+  addCard,
+  fetchCards,
+  deleteCard,
+} from "../api"; // Import API functions
 
 function Pantry() {
+  const Navigate = useNavigate();
   const [itemState, setItemState] = useState([]);
   const [cardState, setCardState] = useState([]);
-  const [input, setInput] = useState("");
-  const [inputAmount, setInputAmount] = useState("");
-  const [inputType, setInputType] = useState("");
+  const [inputCard, setInputCard] = useState("");
   const [token, setToken] = useState(localStorage.getItem("token") || "");
 
   // utilizes the fetchItems function to get the items from the API and set the itemState when the component mounts
+
   useEffect(() => {
     if (token) {
-      fetchItems().then(setItemState);
+      fetchCards().then(setCardState);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      fetchItems().then((items) => {
+        console.log(items);
+        setItemState(items);
+      });
     }
   }, [token]);
 
   // function to add an item to the pantry, it takes the input and inputAmount from the itemState and calls the addItem function from the API
   // then fetches the items again to update the itemState
-  const addPantryItem = async (e) => {
+
+  const addPantry = async (e) => {
     e.preventDefault();
-    await addItem(input, inputAmount, inputType);
-    const items = await fetchItems();
-    setItemState(items);
-    setInput("");
-    setInputAmount("");
+    try {
+      await addCard(inputCard);
+      const cards = await fetchCards();
+      console.log(cards);
+      setCardState(cards);
+      setInputCard("");
+    } catch (error) {
+      console.error("Error adding card:", error);
+      alert("Failed to add card");
+    }
   };
 
   // function to update the quantity of an item, it takes the id and change as parameters and calls the updateQuantity function from the API
@@ -44,10 +68,36 @@ function Pantry() {
     }
   };
 
-  const cards = itemState.map((card) => (
-    <>
-      {" "}
-      <div key={card.id}>
+  const HandleFilteredItems = (cardId) => {
+    const filteredItems = itemState.filter((item) => item.cardId === cardId);
+    return filteredItems.map((item) => (
+      <ul key={item.id}>
+        {item.title} - Quantity: {item.quantity}
+        <button onClick={() => handleUpdateQuantity(item.id, 1)}> + </button>
+        <button
+          onClick={() => handleUpdateQuantity(item.id, -1)}
+          disabled={item.quantity <= 1}
+        >
+          {" "}
+          -{" "}
+        </button>
+        <button
+          style={{ textDecoration: "underline" }}
+          onClick={async () => {
+            await deleteItem(item.id);
+            const items = await fetchItems();
+            setItemState(items);
+          }}
+        >
+          Remove
+        </button>
+      </ul>
+    ));
+  };
+
+  const cards = cardState.map((card) => (
+    <Fragment key={card.id}>
+      <div>
         {card.name}
         <button
           style={{ textDecoration: "underline" }}
@@ -60,64 +110,36 @@ function Pantry() {
           Remove
         </button>
       </div>
-      <div> {items} </div>
-    </>
-  ));
-
-  const items = itemState.map((item) => (
-    <div key={item.id}>
-      {item.title} - Quantity: {item.quantity}
-      <button onClick={() => handleUpdateQuantity(item.id, 1)}> + </button>
       <button
-        onClick={() => handleUpdateQuantity(item.id, -1)}
-        disabled={item.quantity <= 1}
+        onClick={() =>
+          Navigate(
+            "/AddItem",
+            localStorage.setItem(
+              "selectedCard",
+              JSON.stringify({ cardId: card.id, cardName: card.name })
+            )
+          )
+        }
       >
-        {" "}
-        -{" "}
+        Add Item
       </button>
-      <button
-        style={{ textDecoration: "underline" }}
-        onClick={async () => {
-          await deleteItem(item.id);
-          const items = await fetchItems();
-          setItemState(items);
-        }}
-      >
-        Remove
-      </button>
-    </div>
-  ));
+      <div>
+        <HandleFilteredItems cardId={card.id} />
+      </div>
+    </Fragment>
+  )) || <p>No cards available</p>;
 
   return (
     <>
-      <form className="form" onSubmit={addPantryItem}>
+      <form className="form" onSubmit={addPantry}>
         <input
-          placeholder="Enter description"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          placeholder="Enter card name"
+          value={inputCard}
+          onChange={(e) => setInputCard(e.target.value)}
         />
-        <input
-          placeholder="Enter quantity"
-          value={inputAmount}
-          onChange={(e) => setInputAmount(e.target.value)}
-        />
-        <select
-          value={inputType}
-          onChange={(e) => setInputType(e.target.value)}
-        >
-          <option value="meat">Meat</option>
-          <option value="vegetable">Vegetable</option>
-          <option value="fruit">Fruit</option>
-          <option value="dairy">Dairy</option>
-          <option value="grain">Grain</option>
-          <option value="snack">Snack</option>
-          <option value="beverage">Beverage</option>
-          <option value="condiment">Condiment</option>
-          <option value="spice">Spice</option>
-        </select>
-        <button type="submit">Add Item</button>
+        <button type="submit">Add Card</button>
       </form>
-      {cards}
+      <div> {cards} </div>
     </>
   );
 }

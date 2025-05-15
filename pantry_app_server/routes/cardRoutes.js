@@ -12,6 +12,7 @@ function authenticateToken(req, res, next) {
   if (token === null) return res.sendStatus(401);
   jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
     if (err) return res.sendStatus(403);
+    console.log("user", user);
     req.user = user;
     next();
   });
@@ -56,3 +57,5 @@ router.delete("/:id", async (req, res) => {
   });
   res.json("Pantry deleted");
 });
+
+module.exports = router;

@@ -15,22 +15,22 @@ export const fetchItems = async () => {
 };
 
 export const fetchCards = async () => {
-  const token = localStorage.getCard("token");
+  const token = localStorage.getItem("token");
   const response = await axios.get(`${HOST}/cards`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data.sort((a, b) => a.id - b.id);
 };
 
-export const addItem = async (title, quantity, userId) => {
+export const addItem = async (title, quantity, type, cardId) => {
   const token = localStorage.getItem("token");
   await axios.post(
     `${HOST}/items`,
     {
       title,
       quantity: parseInt(quantity) || 1,
-      userId,
       type,
+      cardId,
     },
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -38,14 +38,11 @@ export const addItem = async (title, quantity, userId) => {
   );
 };
 
-export const addCard = async (name, userId) => {
+export const addCard = async (name) => {
   const token = localStorage.getItem("token");
   await axios.post(
     `${HOST}/cards`,
-    {
-      name,
-      userId,
-    },
+    { name },
     {
       headers: { Authorization: `Bearer ${token}` },
     }
@@ -71,7 +68,7 @@ export const deleteItem = async (id) => {
 };
 
 export const deleteCard = async (id) => {
-  const token = localStorage.getCard("token");
+  const token = localStorage.getItem("token");
   await axios.delete(`${HOST}/cards/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
