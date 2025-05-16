@@ -14,6 +14,7 @@ import "../styles.css"; // Import styles
 function Pantry() {
   const Navigate = useNavigate();
   const [itemState, setItemState] = useState([]);
+  const [searchTermState, setSearchTermState] = useState("");
   const [cardState, setCardState] = useState([]);
   const [inputCard, setInputCard] = useState("");
   const [token, setToken] = useState(localStorage.getItem("token") || "");
@@ -32,6 +33,7 @@ function Pantry() {
     if (token) {
       fetchItems().then((items) => {
         setItemState(items);
+        setSearchTermState(items);
       });
     }
   }, [token]);
@@ -69,8 +71,41 @@ function Pantry() {
     }
   };
 
+  const handleSearchName = (e) => {
+    try {
+      const searchTerm = e.target.value.toLowerCase();
+      if (searchTerm === "") {
+        setSearchTermState(itemState);
+      } else {
+        const foundItems = itemState.filter((item) =>
+          item.title.toLowerCase().includes(searchTerm)
+        );
+        setSearchTermState(foundItems);
+      }
+    } catch (error) {
+      console.error("Error searching items:", error);
+      alert("Failed to search items");
+    }
+  };
+
+  const handleSearchType = (e) => {
+    try {
+      const searchType = e.target.value;
+      if (searchType === "") {
+        setSearchTermState(itemState);
+      } else {
+        const foundItems = itemState.filter((item) => item.type === searchType);
+        setSearchTermState(foundItems);
+      }
+    } catch (error) {
+      console.error("Error searching items:", error);
+    }
+  };
+
   const HandleFilteredItems = (cardId) => {
-    const filteredItems = itemState.filter((item) => item.cardId === cardId);
+    const filteredItems = searchTermState.filter(
+      (item) => item.cardId === cardId
+    );
     return filteredItems.map((item) => (
       <ul key={item.id}>
         {item.title} - Quantity: {item.quantity}
@@ -88,6 +123,7 @@ function Pantry() {
             await deleteItem(item.id);
             const items = await fetchItems();
             setItemState(items);
+            setSearchTermState(items);
           }}
         >
           Remove
@@ -130,6 +166,22 @@ function Pantry() {
 
   return (
     <>
+      <input placeholder="Search name" onChange={handleSearchName}></input>
+      <select onChange={handleSearchType}>
+        <option value="">All</option>
+        <option value="meat">Meat</option>
+        <option value="vegetable">Vegetable</option>
+        <option value="fruit">Fruit</option>
+        <option value="dairy">Dairy</option>
+        <option value="grain">Grain</option>
+        <option value="snack">Snack</option>
+        <option value="cereal">Cereal</option>
+        <option value="dessert">Dessert</option>
+        <option value="bread">Bread</option>
+        <option value="beverage">Beverage</option>
+        <option value="condiment">Condiment</option>
+        <option value="spice">Spice</option>
+      </select>
       <form className="form" onSubmit={addPantry}>
         <input
           placeholder="Enter card name"

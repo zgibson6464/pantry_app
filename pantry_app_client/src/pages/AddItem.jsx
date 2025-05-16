@@ -54,6 +54,9 @@ function AddItem() {
           <option value="dairy">Dairy</option>
           <option value="grain">Grain</option>
           <option value="snack">Snack</option>
+          <option value="cereal">Cereal</option>
+          <option value="dessert">Dessert</option>
+          <option value="bread">Bread</option>
           <option value="beverage">Beverage</option>
           <option value="condiment">Condiment</option>
           <option value="spice">Spice</option>
