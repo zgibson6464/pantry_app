@@ -14,7 +14,7 @@ import "../styles.css"; // Import styles
 function Pantry() {
   const Navigate = useNavigate();
   const [itemState, setItemState] = useState([]);
-  const [searchTermState, setSearchTermState] = useState("");
+  const [searchTermState, setSearchTermState] = useState([]);
   const [cardState, setCardState] = useState([]);
   const [inputCard, setInputCard] = useState("");
   const [token, setToken] = useState(localStorage.getItem("token") || "");
@@ -102,11 +102,9 @@ function Pantry() {
     }
   };
 
-  const HandleFilteredItems = (cardId) => {
-    const filteredItems = searchTermState.filter(
-      (item) => item.cardId === cardId
-    );
-    return filteredItems.map((item) => (
+  const HandleUserItems = (cardId) => {
+    const userItems = searchTermState.filter((item) => item.cardId === cardId);
+    return userItems.map((item) => (
       <ul key={item.id}>
         {item.title} - Quantity: {item.quantity}
         <button onClick={() => handleUpdateQuantity(item.id, 1)}> + </button>
@@ -160,7 +158,7 @@ function Pantry() {
       >
         Add Item
       </button>
-      <div>{HandleFilteredItems(card.id)}</div>
+      <div>{HandleUserItems(card.id)}</div>
     </div>
   )) || <p>No cards available</p>;
 
@@ -169,18 +167,18 @@ function Pantry() {
       <input placeholder="Search name" onChange={handleSearchName}></input>
       <select onChange={handleSearchType}>
         <option value="">All</option>
-        <option value="meat">Meat</option>
-        <option value="vegetable">Vegetable</option>
-        <option value="fruit">Fruit</option>
-        <option value="dairy">Dairy</option>
-        <option value="grain">Grain</option>
-        <option value="snack">Snack</option>
-        <option value="cereal">Cereal</option>
-        <option value="dessert">Dessert</option>
-        <option value="bread">Bread</option>
         <option value="beverage">Beverage</option>
+        <option value="bread">Bread</option>
+        <option value="cereal">Cereal</option>
         <option value="condiment">Condiment</option>
+        <option value="dairy">Dairy</option>
+        <option value="dessert">Dessert</option>
+        <option value="fruit">Fruit</option>
+        <option value="grain">Grain</option>
+        <option value="meat">Meat</option>
+        <option value="snack">Snack</option>
         <option value="spice">Spice</option>
+        <option value="vegetable">Vegetable</option>
       </select>
       <form className="form" onSubmit={addPantry}>
         <input

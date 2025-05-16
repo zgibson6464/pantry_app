@@ -48,18 +48,18 @@ function AddItem() {
           <option value="" disabled>
             Select type
           </option>
-          <option value="meat">Meat</option>
-          <option value="vegetable">Vegetable</option>
-          <option value="fruit">Fruit</option>
-          <option value="dairy">Dairy</option>
-          <option value="grain">Grain</option>
-          <option value="snack">Snack</option>
-          <option value="cereal">Cereal</option>
-          <option value="dessert">Dessert</option>
-          <option value="bread">Bread</option>
           <option value="beverage">Beverage</option>
+          <option value="bread">Bread</option>
+          <option value="cereal">Cereal</option>
           <option value="condiment">Condiment</option>
+          <option value="dairy">Dairy</option>
+          <option value="dessert">Dessert</option>
+          <option value="fruit">Fruit</option>
+          <option value="grain">Grain</option>
+          <option value="meat">Meat</option>
+          <option value="snack">Snack</option>
           <option value="spice">Spice</option>
+          <option value="vegetable">Vegetable</option>
         </select>
         <button type="submit">Add Item</button>
       </form>
