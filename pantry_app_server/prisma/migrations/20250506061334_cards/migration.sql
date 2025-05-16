@@ -1,0 +1,28 @@
+/*
+  Warnings:
+
+  - You are about to drop the column `userId` on the `Item` table. All the data in the column will be lost.
+  - Added the required column `cardId` to the `Item` table without a default value. This is not possible if the table is not empty.
+
+*/
+-- DropForeignKey
+ALTER TABLE "Item" DROP CONSTRAINT "Item_userId_fkey";
+
+-- AlterTable
+ALTER TABLE "Item" DROP COLUMN "userId",
+ADD COLUMN     "cardId" INTEGER NOT NULL;
+
+-- CreateTable
+CREATE TABLE "Card" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
+
+    CONSTRAINT "Card_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "Item" ADD CONSTRAINT "Item_cardId_fkey" FOREIGN KEY ("cardId") REFERENCES "Card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Card" ADD CONSTRAINT "Card_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage"; // Import LoginPage component
 import RegisterPage from "./pages/RegisterPage"; // Import RegisterPage component
 import Pantry from "./pages/Pantry"; // Import Pantry component
 import Navbar from "./pages/NavBar";
+import AddItem from "./pages/AddItem"; // Import AddItem component
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token")); // Initialize token state
@@ -17,6 +18,7 @@ function App() {
           <Route path="/login" element={<LoginPage setToken={setToken} />} />
           <Route path="/register" exact element={<RegisterPage />} />
           <Route path="/" exact element={<Pantry />} />
+          <Route path="/AddItem" element={<AddItem />} />
         </Routes>
       </BrowserRouter>
     </>

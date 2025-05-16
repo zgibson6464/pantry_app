@@ -1,37 +1,66 @@
 // description: this file contains the Pantry component, which displays the user's pantry items, allows adding new items, updating quantities, and deleting items. It uses the fetchItems, addItem, updateQuantity, and deleteItem functions from the API module to interact with the backend.
-import React, { useState, useEffect } from "react";
-import { fetchItems, addItem, updateQuantity, deleteItem } from "../api"; // Import API functions
+import React, { useState, useEffect, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  fetchItems,
+  updateQuantity,
+  deleteItem,
+  addCard,
+  fetchCards,
+  deleteCard,
+} from "../api"; // Import API functions
+import "../styles.css"; // Import styles
 
 function Pantry() {
-  const [state, setState] = useState([]);
-  const [input, setInput] = useState("");
-  const [inputAmount, setInputAmount] = useState("");
+  const Navigate = useNavigate();
+  const [itemState, setItemState] = useState([]);
+  const [searchTermState, setSearchTermState] = useState([]);
+  const [cardState, setCardState] = useState([]);
+  const [inputCard, setInputCard] = useState("");
   const [token, setToken] = useState(localStorage.getItem("token") || "");
 
-  // utilizes the fetchItems function to get the items from the API and set the state when the component mounts
+  // utilizes the fetchItems function to get the items from the API and set the itemState when the component mounts
+
   useEffect(() => {
     if (token) {
-      fetchItems().then(setState);
+      fetchCards().then((cards) => {
+        setCardState(cards);
+      });
     }
   }, [token]);
 
-  // function to add an item to the pantry, it takes the input and inputAmount from the state and calls the addItem function from the API
-  // then fetches the items again to update the state
-  const addPantryItem = async (e) => {
+  useEffect(() => {
+    if (token) {
+      fetchItems().then((items) => {
+        setItemState(items);
+        setSearchTermState(items);
+      });
+    }
+  }, [token]);
+
+  // function to add an item to the pantry, it takes the input and inputAmount from the itemState and calls the addItem function from the API
+  // then fetches the items again to update the itemState
+
+  const addPantry = async (e) => {
     e.preventDefault();
-    await addItem(input, inputAmount);
-    const items = await fetchItems();
-    setState(items);
-    setInput("");
-    setInputAmount("");
+    try {
+      await addCard(inputCard);
+      const cards = await fetchCards();
+      console.log(cards);
+      setCardState(cards);
+      setInputCard("");
+    } catch (error) {
+      console.error("Error adding card:", error);
+      alert("Failed to add card");
+    }
   };
 
   // function to update the quantity of an item, it takes the id and change as parameters and calls the updateQuantity function from the API
-  // then updates the state with the new quantity
+  // then updates the itemState with the new quantity
   const handleUpdateQuantity = async (id, change) => {
     try {
       await updateQuantity(id, change);
-      setState((prevState) =>
+      setItemState((prevState) =>
         prevState.map((item) =>
           item.id === id ? { ...item, quantity: item.quantity + change } : item
         )
@@ -42,46 +71,124 @@ function Pantry() {
     }
   };
 
-  const items = state.map((item) => (
-    <div key={item.id}>
-      {item.title} - Quantity: {item.quantity}
-      <button onClick={() => handleUpdateQuantity(item.id, 1)}> + </button>
+  const handleSearchName = (e) => {
+    try {
+      const searchTerm = e.target.value.toLowerCase();
+      if (searchTerm === "") {
+        setSearchTermState(itemState);
+      } else {
+        const foundItems = itemState.filter((item) =>
+          item.title.toLowerCase().includes(searchTerm)
+        );
+        setSearchTermState(foundItems);
+      }
+    } catch (error) {
+      console.error("Error searching items:", error);
+      alert("Failed to search items");
+    }
+  };
+
+  const handleSearchType = (e) => {
+    try {
+      const searchType = e.target.value;
+      if (searchType === "") {
+        setSearchTermState(itemState);
+      } else {
+        const foundItems = itemState.filter((item) => item.type === searchType);
+        setSearchTermState(foundItems);
+      }
+    } catch (error) {
+      console.error("Error searching items:", error);
+    }
+  };
+
+  const HandleUserItems = (cardId) => {
+    const userItems = searchTermState.filter((item) => item.cardId === cardId);
+    return userItems.map((item) => (
+      <ul key={item.id}>
+        {item.title} - Quantity: {item.quantity}
+        <button onClick={() => handleUpdateQuantity(item.id, 1)}> + </button>
+        <button
+          onClick={() => handleUpdateQuantity(item.id, -1)}
+          disabled={item.quantity <= 1}
+        >
+          {" "}
+          -{" "}
+        </button>
+        <button
+          style={{ textDecoration: "underline" }}
+          onClick={async () => {
+            await deleteItem(item.id);
+            const items = await fetchItems();
+            setItemState(items);
+            setSearchTermState(items);
+          }}
+        >
+          Remove
+        </button>
+      </ul>
+    ));
+  };
+
+  const cards = cardState.map((card) => (
+    <div key={card.id} className="card">
+      <div>
+        {card.name}
+        <button
+          style={{ textDecoration: "underline" }}
+          onClick={async () => {
+            await deleteCard(card.id);
+            const cards = await fetchCards();
+            setCardState(cards);
+          }}
+        >
+          Remove
+        </button>
+      </div>
       <button
-        onClick={() => handleUpdateQuantity(item.id, -1)}
-        disabled={item.quantity <= 1}
+        onClick={() =>
+          Navigate(
+            "/AddItem",
+            localStorage.setItem(
+              "selectedCard",
+              JSON.stringify({ cardId: card.id, cardName: card.name })
+            )
+          )
+        }
       >
-        {" "}
-        -{" "}
+        Add Item
       </button>
-      <button
-        style={{ textDecoration: "underline" }}
-        onClick={async () => {
-          await deleteItem(item.id);
-          const items = await fetchItems();
-          setState(items);
-        }}
-      >
-        Remove
-      </button>
+      <div>{HandleUserItems(card.id)}</div>
     </div>
-  ));
+  )) || <p>No cards available</p>;
 
   return (
     <>
-      <form className="form" onSubmit={addPantryItem}>
+      <input placeholder="Search name" onChange={handleSearchName}></input>
+      <select onChange={handleSearchType}>
+        <option value="">All</option>
+        <option value="beverage">Beverage</option>
+        <option value="bread">Bread</option>
+        <option value="cereal">Cereal</option>
+        <option value="condiment">Condiment</option>
+        <option value="dairy">Dairy</option>
+        <option value="dessert">Dessert</option>
+        <option value="fruit">Fruit</option>
+        <option value="grain">Grain</option>
+        <option value="meat">Meat</option>
+        <option value="snack">Snack</option>
+        <option value="spice">Spice</option>
+        <option value="vegetable">Vegetable</option>
+      </select>
+      <form className="form" onSubmit={addPantry}>
         <input
-          placeholder="Enter description"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          placeholder="Enter card name"
+          value={inputCard}
+          onChange={(e) => setInputCard(e.target.value)}
         />
-        <input
-          placeholder="Enter quantity"
-          value={inputAmount}
-          onChange={(e) => setInputAmount(e.target.value)}
-        />
-        <button type="submit">Add Item</button>
+        <button type="submit">Add Card</button>
       </form>
-      {items}
+      <div className="card-container"> {cards} </div>
     </>
   );
 }

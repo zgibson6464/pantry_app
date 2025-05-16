@@ -15,8 +15,6 @@
 
 body {
   margin: 0;
-  display: flex;
-  flex-direction: column; /* Ensure content stacks properly */
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
@@ -79,9 +77,6 @@ button:focus-visible {
   a:hover {
     color: #747bff;
   }
-  button {
-    background-color: #f9f9f9;
-  }
 }
 
 .logo {
@@ -112,8 +107,18 @@ button:focus-visible {
   }
 }
 
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1em;
+  padding: 1em;
+  background-color: #242424;
+}
+
 .card {
   padding: 2em;
+  border-radius: 1em;
+  background-color: #242424;
 }
 
 .read-the-docs {
@@ -121,8 +126,6 @@ button:focus-visible {
 }
 
 .form {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
