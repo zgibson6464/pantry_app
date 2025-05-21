@@ -60,6 +60,9 @@ function Pantry() {
   const handleUpdateQuantity = async (id, change) => {
     try {
       await updateQuantity(id, change);
+      const items = await fetchItems();
+      setItemState(items);
+      setSearchTermState(items);
       setItemState((prevState) =>
         prevState.map((item) =>
           item.id === id ? { ...item, quantity: item.quantity + change } : item

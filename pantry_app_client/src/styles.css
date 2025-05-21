@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87); /* Ensure text is visible in dark mode */
-  background-color: #242424; /* Dark mode by default */
+  background-color: #414040; /* Dark mode by default */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -20,7 +20,7 @@ body {
   min-height: 100vh;
   width: 100%; /* Ensure it spans the full width */
   height: 100%; /* Ensure it spans the full height */
-  background-color: #242424; /* Set dark background for the entire page */
+  background-color: #424242; /* Set dark background for the entire page */
   color: rgba(255, 255, 255, 0.87); /* Ensure text is visible */
 }
 
@@ -30,7 +30,7 @@ body {
   margin: 0;
   padding: 0; /* Removed padding to avoid white gaps */
   text-align: center;
-  background-color: #242424; /* Ensure root container inherits dark background */
+  background-color: #303030; /* Ensure root container inherits dark background */
   color: rgba(255, 255, 255, 0.87); /* Ensure text is visible */
 }
 
@@ -112,13 +112,13 @@ button:focus-visible {
   grid-template-columns: repeat(3, 1fr);
   gap: 1em;
   padding: 1em;
-  background-color: #242424;
+  background-color: #37373700;
 }
 
 .card {
   padding: 2em;
   border-radius: 1em;
-  background-color: #252525;
+  background-color: #3f3f3f;
   border: #060000 solid 1px;
 }
 
@@ -138,7 +138,12 @@ button:focus-visible {
 }
 
 .card-button:hover {
+  padding: 0.5em 1em;
+  background-color: #1a1a1a;
+  color: white;
   border: #535bf2 1px solid;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .items {
@@ -172,6 +177,13 @@ button:focus-visible {
 }
 .item-button:hover {
   border: #535bf2 1px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0.25em 1em;
+  margin: 0.1em;
+  font-size: small;
+  background-color: #1a1a1a;
+  color: white;
 }
 
 form {
