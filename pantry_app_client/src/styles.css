@@ -107,7 +107,7 @@ button:focus-visible {
   }
 }
 
-.card-container {
+.cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1em;
@@ -118,58 +118,87 @@ button:focus-visible {
 .card {
   padding: 2em;
   border-radius: 1em;
-  background-color: #242424;
+  background-color: #252525;
+  border: #060000 solid 1px;
 }
 
-.read-the-docs {
-  color: #888;
+.card-header {
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
+  text-decoration: underline;
 }
 
-.form {
-  align-items: center;
-  justify-content: center;
-}
-.form input {
-  width: 100%;
-  max-width: 400px;
-  padding: 0.5em;
-  margin: 0.5em 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.form button {
+.card-button {
   padding: 0.5em 1em;
-  background-color: #007bff;
+  background-color: #1a1a1a;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
-.navbar {
+.card-button:hover {
+  border: #535bf2 1px solid;
+}
+
+.items {
   display: flex;
-  align-items: center; /* Align items vertically */
-  justify-content: center; /* Center all items horizontally */
-  position: fixed;
-  top: 0;
-  left: 0;
+  flex-direction: column;
+  border: #000000 solid 1px;
+  border-radius: 0.5em;
+  padding: 0.1em 0.2em;
+}
+
+.item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  border: #000000 solid 1px;
+  border-radius: 0.2em;
+  padding: 0.25em 0.5em;
+  margin: 0.2em;
+}
+
+.item-button {
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0.25em 1em;
+  margin: 0.1em;
+  font-size: small;
+}
+.item-button:hover {
+  border: #535bf2 1px solid;
+}
+
+form {
+  align-items: center;
+  justify-content: center;
+}
+form input {
   width: 100%;
-  padding: 10px 20px;
-  background-color: #343a40; /* Dark background */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  max-width: 200px;
+  padding: 0.5em 1em;
+  height: 1.5em;
+  border: 1px solid #060000;
+  border-radius: 4px;
 }
 
-.navbar h1 {
-  color: white; /* Ensure the text is visible */
-  margin: 0 auto; /* Center the h1 horizontally */
-  font-size: 3rem; /* Adjust font size for the navbar */
-  line-height: 1; /* Ensure proper vertical alignment */
+form select {
+  width: auto;
+  padding: 0.5em 1em;
+  border: 1px solid #060000;
+  border-radius: 4px;
 }
 
-.navbar .menu-items {
-  position: absolute; /* Position menu items independently */
-  right: 20px; /* Align menu items to the right */
-  display: flex; /* Ensure items are laid out horizontally */
-  align-items: center; /* Align items vertically */
+form button {
+  padding: 0.5em 1em;
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }

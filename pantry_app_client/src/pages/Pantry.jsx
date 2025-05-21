@@ -105,47 +105,47 @@ function Pantry() {
   const HandleUserItems = (cardId) => {
     const userItems = searchTermState.filter((item) => item.cardId === cardId);
     return userItems.map((item) => (
-      <ul key={item.id}>
-        {item.title} - Quantity: {item.quantity}
-        <button onClick={() => handleUpdateQuantity(item.id, 1)}> + </button>
-        <button
-          onClick={() => handleUpdateQuantity(item.id, -1)}
-          disabled={item.quantity <= 1}
-        >
-          {" "}
-          -{" "}
-        </button>
-        <button
-          style={{ textDecoration: "underline" }}
-          onClick={async () => {
-            await deleteItem(item.id);
-            const items = await fetchItems();
-            setItemState(items);
-            setSearchTermState(items);
-          }}
-        >
-          Remove
-        </button>
-      </ul>
+      <>
+        <div key={item.id} className="item">
+          {item.title}: {item.quantity}
+          <button
+            className="item-button"
+            onClick={() => handleUpdateQuantity(item.id, 1)}
+          >
+            {" "}
+            +{" "}
+          </button>
+          <button
+            className="item-button"
+            onClick={() => handleUpdateQuantity(item.id, -1)}
+            disabled={item.quantity <= 1}
+          >
+            {" "}
+            -{" "}
+          </button>
+          <button
+            className="item-button"
+            style={{ textDecoration: "underline" }}
+            onClick={async () => {
+              await deleteItem(item.id);
+              const items = await fetchItems();
+              setItemState(items);
+              setSearchTermState(items);
+            }}
+          >
+            Remove
+          </button>
+        </div>
+      </>
     ));
   };
 
   const cards = cardState.map((card) => (
     <div key={card.id} className="card">
-      <div>
-        {card.name}
-        <button
-          style={{ textDecoration: "underline" }}
-          onClick={async () => {
-            await deleteCard(card.id);
-            const cards = await fetchCards();
-            setCardState(cards);
-          }}
-        >
-          Remove
-        </button>
-      </div>
+      <div className="card-header">{card.name}</div>
+      <div className="items">{HandleUserItems(card.id)}</div>
       <button
+        className="card-button"
         onClick={() =>
           Navigate(
             "/AddItem",
@@ -158,28 +158,40 @@ function Pantry() {
       >
         Add Item
       </button>
-      <div>{HandleUserItems(card.id)}</div>
+      <button
+        className="card-button"
+        style={{ textDecoration: "underline" }}
+        onClick={async () => {
+          await deleteCard(card.id);
+          const cards = await fetchCards();
+          setCardState(cards);
+        }}
+      >
+        Remove Pantry
+      </button>
     </div>
   )) || <p>No cards available</p>;
 
   return (
     <>
-      <input placeholder="Search name" onChange={handleSearchName}></input>
-      <select onChange={handleSearchType}>
-        <option value="">All</option>
-        <option value="beverage">Beverage</option>
-        <option value="bread">Bread</option>
-        <option value="cereal">Cereal</option>
-        <option value="condiment">Condiment</option>
-        <option value="dairy">Dairy</option>
-        <option value="dessert">Dessert</option>
-        <option value="fruit">Fruit</option>
-        <option value="grain">Grain</option>
-        <option value="meat">Meat</option>
-        <option value="snack">Snack</option>
-        <option value="spice">Spice</option>
-        <option value="vegetable">Vegetable</option>
-      </select>
+      <form className="form">
+        <input placeholder="Search name" onChange={handleSearchName}></input>
+        <select onChange={handleSearchType}>
+          <option value="">All</option>
+          <option value="beverage">Beverage</option>
+          <option value="bread">Bread</option>
+          <option value="cereal">Cereal</option>
+          <option value="condiment">Condiment</option>
+          <option value="dairy">Dairy</option>
+          <option value="dessert">Dessert</option>
+          <option value="fruit">Fruit</option>
+          <option value="grain">Grain</option>
+          <option value="meat">Meat</option>
+          <option value="snack">Snack</option>
+          <option value="spice">Spice</option>
+          <option value="vegetable">Vegetable</option>
+        </select>
+      </form>
       <form className="form" onSubmit={addPantry}>
         <input
           placeholder="Enter card name"
@@ -188,7 +200,7 @@ function Pantry() {
         />
         <button type="submit">Add Card</button>
       </form>
-      <div className="card-container"> {cards} </div>
+      <div className="cards"> {cards} </div>
     </>
   );
 }
