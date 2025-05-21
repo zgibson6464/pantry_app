@@ -63,11 +63,6 @@ function Pantry() {
       const items = await fetchItems();
       setItemState(items);
       setSearchTermState(items);
-      setItemState((prevState) =>
-        prevState.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity + change } : item
-        )
-      );
     } catch (error) {
       console.error("Error updating quantity:", error);
       alert("Failed to update quantity");
