@@ -33,6 +33,14 @@ router.post("/register", async (req, res) => {
         username,
         email,
         password: hashedPassword,
+        carts: {
+          create: {
+            name: "Shopping Cart",
+            items: {
+              create: [],
+            },
+          },
+        },
       },
     });
 

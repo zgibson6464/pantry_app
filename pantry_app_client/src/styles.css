@@ -165,7 +165,7 @@ button:focus-visible {
   margin: 0.2em;
 }
 
-.item-button {
+.item button {
   background-color: #1a1a1a;
   color: white;
   border: none;

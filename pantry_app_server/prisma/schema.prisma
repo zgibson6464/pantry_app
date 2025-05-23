@@ -20,6 +20,8 @@ model User {
   password String
   cards    Card[]
   items    Item[]
+  recipes Recipe[]
+  carts    Cart[]
 }
 
 model Item {
@@ -31,6 +33,11 @@ model Item {
   card     Card @relation(fields: [cardId], references: [id])
   userId   Int
   user     User @relation(fields: [userId], references: [id])
+  recipeId Int?
+  recipe   Recipe? @relation(fields: [recipeId], references: [id])
+  cartId   Int?
+  cart     Cart? @relation(fields: [cartId], references: [id])
+  inCart   Boolean @default(false)
 }
 
 model Card {
@@ -39,4 +46,21 @@ model Card {
   userId Int
   user User @relation(fields: [userId], references: [id])
   items Item[]
+}
+
+model Cart {
+  id Int @id @default(autoincrement())
+  name String
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  items Item[]
+}
+
+model Recipe {
+  id Int @id @default(autoincrement())
+  title String
+  items Item[]
+  instructions String
+  userId Int
+  user User @relation(fields: [userId], references: [id])
 }

@@ -1,5 +1,5 @@
 // description: this file contains the Pantry component, which displays the user's pantry items, allows adding new items, updating quantities, and deleting items. It uses the fetchItems, addItem, updateQuantity, and deleteItem functions from the API module to interact with the backend.
-import React, { useState, useEffect, Fragment } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   fetchItems,
@@ -8,6 +8,7 @@ import {
   addCard,
   fetchCards,
   deleteCard,
+  updateInCart,
 } from "../api"; // Import API functions
 import "../styles.css"; // Import styles
 
@@ -69,6 +70,18 @@ function Pantry() {
     }
   };
 
+  const handleUpdateCart = async (id, inCart) => {
+    try {
+      await updateInCart(id, !inCart);
+      const items = await fetchItems();
+      setItemState(items);
+      setSearchTermState(items);
+    } catch (error) {
+      console.error("Error updating cart:", error);
+      alert("Failed to update cart");
+    }
+  };
+
   const handleSearchName = (e) => {
     try {
       const searchTerm = e.target.value.toLowerCase();
@@ -100,48 +113,32 @@ function Pantry() {
     }
   };
 
-  const HandleUserItems = (cardId) => {
+  const handleUserItems = (cardId) => {
     const userItems = searchTermState.filter((item) => item.cardId === cardId);
     return userItems.map((item) => (
-      <>
-        <div key={item.id} className="item">
-          {item.title}: {item.quantity}
-          <button
-            className="item-button"
-            onClick={() => handleUpdateQuantity(item.id, 1)}
-          >
-            {" "}
-            +{" "}
-          </button>
-          <button
-            className="item-button"
-            onClick={() => handleUpdateQuantity(item.id, -1)}
-            disabled={item.quantity <= 1}
-          >
-            {" "}
-            -{" "}
-          </button>
-          <button
-            className="item-button"
-            style={{ textDecoration: "underline" }}
-            onClick={async () => {
-              await deleteItem(item.id);
-              const items = await fetchItems();
-              setItemState(items);
-              setSearchTermState(items);
-            }}
-          >
-            Remove
-          </button>
-        </div>
-      </>
+      <div key={item.id} className="item">
+        <h3>{item.title}</h3>
+        <p>Quantity: {item.quantity}</p>
+        <p>Type: {item.type}</p>
+        <button onClick={() => handleUpdateQuantity(item.id, 1)}>+</button>
+        <button
+          onClick={() => handleUpdateQuantity(item.id, -1)}
+          disabled={item.quantity <= 1}
+        >
+          -
+        </button>
+        <button onClick={() => deleteItem(item.id)}>Delete</button>
+        <button onClick={() => handleUpdateCart(item.id, item.inCart)}>
+          {item.inCart ? "Remove from Cart" : "Add to Cart"}{" "}
+        </button>
+      </div>
     ));
   };
 
   const cards = cardState.map((card) => (
     <div key={card.id} className="card">
       <div className="card-header">{card.name}</div>
-      <div className="items">{HandleUserItems(card.id)}</div>
+      <div className="items">{handleUserItems(card.id)}</div>
       <button
         className="card-button"
         onClick={() =>

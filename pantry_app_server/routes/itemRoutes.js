@@ -72,6 +72,21 @@ router.put("/:id/quantity", authenticateToken, async (req, res) => {
   }
 });
 
+router.put("/:id/inCart", authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { inCart, cartId } = req.body;
+  try {
+    const item = await prisma.item.update({
+      where: { id: parseInt(id) },
+      data: { inCart: inCart, cartId: parseInt(cartId) },
+    });
+    res.json(item);
+  } catch (error) {
+    console.error("Error updating item inCart status:", error);
+    res.status(500).json({ error: "Failed to update item inCart status" });
+  }
+});
+
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
   await prisma.item.delete({

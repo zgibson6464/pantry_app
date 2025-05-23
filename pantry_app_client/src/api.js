@@ -22,6 +22,14 @@ export const fetchCards = async () => {
   return response.data.sort((a, b) => a.id - b.id);
 };
 
+export const fetchCarts = async () => {
+  const token = localStorage.getItem("token");
+  const response = await axios.get(`${HOST}/carts`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data.sort((a, b) => a.id - b.id);
+};
+
 export const addItem = async (title, quantity, type, cardId) => {
   const token = localStorage.getItem("token");
   await axios.post(
@@ -57,6 +65,15 @@ export const updateQuantity = async (id, change) => {
     {
       headers: { Authorization: `Bearer ${token}` },
     }
+  );
+};
+
+export const updateInCart = async (id, inCart) => {
+  const token = localStorage.getItem("token");
+  await axios.put(
+    `${HOST}/items/${id}/inCart`,
+    { inCart, id },
+    { headers: { Authorization: `Bearer ${token}` } }
   );
 };
 

@@ -16,7 +16,13 @@ export default function Navbar({ setToken }) {
           className="menu-item"
           onClick={() => handleLogout({ setToken })} // utillizes the handleLogout function from api.js
         >
-          <p className="nav-logout">Logout</p>
+          <p>Logout</p>
+        </Link>
+        <Link to="/" className="menu-item">
+          <p>Home</p>
+        </Link>
+        <Link to="/Cart" className="menu-item">
+          <p>Cart</p>
         </Link>
       </div>
     </Nav>
