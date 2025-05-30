@@ -22,9 +22,9 @@ export const fetchCards = async () => {
   return response.data.sort((a, b) => a.id - b.id);
 };
 
-export const fetchCarts = async () => {
+export const fetchCart = async () => {
   const token = localStorage.getItem("token");
-  const response = await axios.get(`${HOST}/carts`, {
+  const response = await axios.get(`${HOST}/cart`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data.sort((a, b) => a.id - b.id);

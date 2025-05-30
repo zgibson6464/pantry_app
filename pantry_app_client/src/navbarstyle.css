@@ -1,5 +1,6 @@
 .navbar {
   display: flex;
+  flex-direction: column;
   align-items: center; /* Align items vertically */
   justify-content: center; /* Center all items horizontally */
   top: 0;
@@ -12,16 +13,16 @@
 .navbar h1 {
   color: white; /* Ensure the text is visible */
   margin: 0 auto; /* Center the h1 horizontally */
-  font-size: 2rem; /* Adjust font size for the navbar */
-  line-height: 1; /* Ensure proper vertical alignment */
+  font-size: 2em; /* Adjust font size for the navbar */
   text-align: center; /* Center the text */
   position: static;
 }
 
 .navbar .menu-items {
-  position: absolute; /* Position menu items independently */
   display: flex; /* Ensure items are laid out horizontally */
   right: 20px; /* Align to the right */
+  margin: 0 auto; /* Center the menu items */
+  gap: 1em; /* Space between menu items */
 }
 
 /* .menu-item {

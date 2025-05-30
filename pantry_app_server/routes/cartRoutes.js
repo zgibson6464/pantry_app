@@ -20,12 +20,12 @@ function authenticateToken(req, res, next) {
 
 router.get("/", authenticateToken, async (req, res) => {
   try {
-    const carts = await prisma.cart.findMany({
+    const cart = await prisma.cart.findMany({
       where: { userId: req.user.userId },
     });
-    res.json(carts);
+    res.json(cart);
   } catch (error) {
-    console.error("Error fetching carts:", error);
+    console.error("Error fetching cart:", error);
   }
 });
 

@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { fetchItems, updateQuantity, deleteItem, fetchCarts } from "../api"; // Import API functions
+import {
+  fetchItems,
+  updateQuantity,
+  deleteItem,
+  fetchCart,
+  updateInCart,
+} from "../api"; // Import API functions
 import "../styles.css"; // Import styles
 
 function Cart() {
@@ -7,10 +13,11 @@ function Cart() {
   const [searchTermState, setSearchTermState] = useState([]);
   const [itemState, setItemState] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [pendingQuantities, setPendingQuantities] = useState({});
 
   useEffect(() => {
     if (token) {
-      fetchCarts().then((carts) => {
+      fetchCart().then((carts) => {
         setCartState(carts);
       });
     }
@@ -37,7 +44,34 @@ function Cart() {
     }
   };
 
+  const handleAddPendingQuantity = async (itemId) => {
+    const addValue = parseInt(pendingQuantities[itemId]) || 0;
+    if (addValue > 0) {
+      await handleUpdateQuantity(itemId, addValue);
+      setPendingQuantities((prev) => ({ ...prev, [itemId]: "" }));
+    }
+  };
+
+  const handleUpdateCart = async (id, inCart) => {
+    try {
+      await updateInCart(id, !inCart);
+      const items = await fetchItems();
+      setItemState(items);
+      setSearchTermState(items);
+    } catch (error) {
+      console.error("Error updating cart:", error);
+      alert("Failed to update cart");
+    }
+  };
+
   const handleUserItems = () => {
+    const handlePendingQuantityChange = (itemId, value) => {
+      setPendingQuantities((prev) => ({
+        ...prev,
+        [itemId]: value,
+      }));
+    };
+
     const cartItems = searchTermState.filter((item) => item.inCart === true);
     if (cartItems.length === 0) {
       return <p>No items in this cart</p>;
@@ -45,16 +79,26 @@ function Cart() {
     return cartItems.map((item) => (
       <div key={item.id} className="item">
         <h3>{item.title} - </h3>
-        <p>Quantity: {item.quantity} - </p>
+        <p>Current Quantity: {item.quantity} - </p>
         <p>Type: {item.type} </p>
-        <button onClick={() => handleUpdateQuantity(item.id, 1)}>+</button>
+        <input
+          type="number"
+          min="0"
+          value={pendingQuantities[item.id] || ""}
+          onChange={(e) => handlePendingQuantityChange(item.id, e.target.value)}
+          placeholder="Add Quantity"
+        />
         <button
-          onClick={() => handleUpdateQuantity(item.id, -1)}
-          disabled={item.quantity <= 1}
+          onClick={() => {
+            handleAddPendingQuantity(item.id);
+            handleUpdateCart(item.id, item.inCart);
+          }}
         >
-          -
+          Add to Pantry
         </button>
-        <button onClick={() => deleteItem(item.id)}>Delete</button>
+        <button onClick={() => handleUpdateCart(item.id, item.inCart)}>
+          Remove from Cart
+        </button>
       </div>
     ));
   };

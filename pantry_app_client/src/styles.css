@@ -109,7 +109,7 @@ button:focus-visible {
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1em;
   padding: 1em;
   background-color: #37373700;
@@ -190,7 +190,7 @@ form {
   align-items: center;
   justify-content: center;
 }
-form input {
+input {
   width: 100%;
   max-width: 200px;
   padding: 0.5em 1em;
