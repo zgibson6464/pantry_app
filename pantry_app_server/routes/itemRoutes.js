@@ -34,10 +34,20 @@ router.get("/", authenticateToken, async (req, res) => {
 router.post("/", authenticateToken, async (req, res) => {
   const { title, type, quantity, cardId } = req.body;
   const userId = req.user.userId;
+  const existingItem = await prisma.item.findFirst({
+    where: {
+      userId: parseInt(userId),
+      title: title,
+    },
+  });
+
   if (!title || !type || !cardId) {
     return res
       .status(400)
       .json({ error: "Title and userId and type are required" });
+  }
+  if (existingItem) {
+    return res.status(400).json({ error: "Item already exists" });
   }
 
   try {

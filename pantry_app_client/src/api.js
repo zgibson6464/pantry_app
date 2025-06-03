@@ -30,7 +30,14 @@ export const fetchCart = async () => {
   return response.data.sort((a, b) => a.id - b.id);
 };
 
-export const addItem = async (title, quantity, type, cardId) => {
+export const addItem = async (
+  title,
+  quantity,
+  type,
+  cardId,
+  inCart = false,
+  cartId = null
+) => {
   const token = localStorage.getItem("token");
   await axios.post(
     `${HOST}/items`,
@@ -39,6 +46,8 @@ export const addItem = async (title, quantity, type, cardId) => {
       quantity: parseInt(quantity) || 1,
       type,
       cardId,
+      inCart,
+      cartId,
     },
     {
       headers: { Authorization: `Bearer ${token}` },

@@ -1,17 +1,23 @@
 import { useState, useEffect } from "react";
 import {
   fetchItems,
+  addItem,
   updateQuantity,
-  deleteItem,
   fetchCart,
+  fetchCards,
   updateInCart,
 } from "../api"; // Import API functions
 import "../styles.css"; // Import styles
 
 function Cart() {
   const [cartState, setCartState] = useState([]);
+  const [cardState, setCardState] = useState([]);
   const [searchTermState, setSearchTermState] = useState([]);
+  const [inputAmount, setInputAmount] = useState("");
+  const [inputType, setInputType] = useState("");
   const [itemState, setItemState] = useState([]);
+  const [cardId, setCardId] = useState("");
+  const [input, setInput] = useState("");
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [pendingQuantities, setPendingQuantities] = useState({});
 
@@ -31,6 +37,41 @@ function Cart() {
       });
     }
   }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      fetchCards().then((cards) => {
+        setCardState(cards);
+      });
+    }
+  }, [token]);
+
+  const addCartItem = async (e, cartId) => {
+    e.preventDefault();
+    console.log("Adding item:", input, inputAmount, inputType, cardId);
+    if (!input || !inputAmount || !inputType || !cardId) {
+      alert("Please fill in all fields");
+      return;
+    }
+    try {
+      await addItem(
+        input,
+        inputAmount,
+        inputType,
+        cartId,
+        cardId,
+        true,
+        cartId
+      );
+      setInput("");
+      setInputAmount("");
+      setInputType("");
+      setCardId("");
+    } catch (error) {
+      console.error("Error adding item:", error);
+      alert("Failed to add item");
+    }
+  };
 
   const handleUpdateQuantity = async (id, change) => {
     try {
@@ -73,9 +114,6 @@ function Cart() {
     };
 
     const cartItems = searchTermState.filter((item) => item.inCart === true);
-    if (cartItems.length === 0) {
-      return <p>No items in this cart</p>;
-    }
     return cartItems.map((item) => (
       <div key={item.id} className="item">
         <h3>{item.title} - </h3>
@@ -103,10 +141,93 @@ function Cart() {
     ));
   };
 
+  const handleSearchType = (e) => {
+    try {
+      const searchType = e.target.value;
+      if (searchType === "") {
+        setSearchTermState(itemState);
+      } else {
+        const foundItems = itemState.filter((item) => item.type === searchType);
+        setSearchTermState(foundItems);
+      }
+    } catch (error) {
+      console.error("Error searching items:", error);
+    }
+  };
+
+  const handleSearchName = (e) => {
+    try {
+      const searchTerm = e.target.value.toLowerCase();
+      if (searchTerm === "") {
+        setSearchTermState(itemState);
+      } else {
+        const foundItems = itemState.filter((item) =>
+          item.title.toLowerCase().includes(searchTerm)
+        );
+        setSearchTermState(foundItems);
+      }
+    } catch (error) {
+      console.error("Error searching items:", error);
+      alert("Failed to search items");
+    }
+  };
+
+  const handleAddItem = (cartId) => {
+    return (
+      <div>
+        <h2>Add Item to Cart</h2>
+        <form className="form" onSubmit={(e) => addCartItem(e, cartId)}>
+          <input
+            value={input}
+            placeholder="Enter item description"
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <input
+            value={inputAmount}
+            placeholder="Enter quantity"
+            onChange={(e) => setInputAmount(e.target.value)}
+          />
+          <select
+            value={inputType}
+            onChange={(e) => setInputType(e.target.value)}
+          >
+            <option value="" disabled>
+              Select Type
+            </option>
+            <option value="beverage">Beverage</option>
+            <option value="bread">Bread</option>
+            <option value="cereal">Cereal</option>
+            <option value="condiment">Condiment</option>
+            <option value="dairy">Dairy</option>
+            <option value="dessert">Dessert</option>
+            <option value="fruit">Fruit</option>
+            <option value="grain">Grain</option>
+            <option value="meat">Meat</option>
+            <option value="snack">Snack</option>
+            <option value="spice">Spice</option>
+            <option value="vegetable">Vegetable</option>
+          </select>
+          <select value={cardId} onChange={(e) => setCardId(e.target.value)}>
+            <option value="" disabled>
+              Select Pantry
+            </option>
+            {cardState.map((card) => (
+              <option key={card.id} value={card.id}>
+                {card.name}
+              </option>
+            ))}
+          </select>
+          <button type="submit">Add Item</button>
+        </form>
+      </div>
+    );
+  };
+
   const carts = cartState.map((cart) => (
     <div key={cart.id} className="card">
       <h3>{cart.name}</h3>
       <div className="items">{handleUserItems(cart.id)}</div>
+      {handleAddItem(cart.id)}
     </div>
   ));
 
@@ -114,6 +235,24 @@ function Cart() {
     <>
       <div>
         <h1> Shopping Cart </h1>
+        <form className="form">
+          <input placeholder="Search name" onChange={handleSearchName}></input>
+          <select onChange={handleSearchType}>
+            <option value="">All</option>
+            <option value="beverage">Beverage</option>
+            <option value="bread">Bread</option>
+            <option value="cereal">Cereal</option>
+            <option value="condiment">Condiment</option>
+            <option value="dairy">Dairy</option>
+            <option value="dessert">Dessert</option>
+            <option value="fruit">Fruit</option>
+            <option value="grain">Grain</option>
+            <option value="meat">Meat</option>
+            <option value="snack">Snack</option>
+            <option value="spice">Spice</option>
+            <option value="vegetable">Vegetable</option>
+          </select>
+        </form>
         {carts}
       </div>
     </>
