@@ -64,6 +64,12 @@ function Pantry() {
       const items = await fetchItems();
       setItemState(items);
       setSearchTermState(items);
+      const zeroQuantityItems = items.filter(
+        (item) => item.quantity <= 0 && !item.inCart
+      );
+      for (const item of zeroQuantityItems) {
+        await handleUpdateCart(item.id, item.inCart);
+      }
     } catch (error) {
       console.error("Error updating quantity:", error);
       alert("Failed to update quantity");
@@ -123,7 +129,7 @@ function Pantry() {
         <button onClick={() => handleUpdateQuantity(item.id, 1)}>+</button>
         <button
           onClick={() => handleUpdateQuantity(item.id, -1)}
-          disabled={item.quantity <= 1}
+          disabled={item.quantity <= 0}
         >
           -
         </button>

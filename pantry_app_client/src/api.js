@@ -57,11 +57,33 @@ export const addCard = async (name) => {
   );
 };
 
+export const updateQuantityChange = async (id, quantityChange) => {
+  const token = localStorage.getItem("token");
+  await axios.put(
+    `${HOST}/items/${id}/quantityChange`,
+    { quantityChange },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};
+
 export const updateQuantity = async (id, change) => {
   const token = localStorage.getItem("token");
   await axios.put(
     `${HOST}/items/${id}/quantity`,
     { change },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};
+
+export const updateCard = async (id, cardId) => {
+  const token = localStorage.getItem("token");
+  await axios.put(
+    `${HOST}/items/${id}/card`,
+    { cardId: cardId },
     {
       headers: { Authorization: `Bearer ${token}` },
     }
