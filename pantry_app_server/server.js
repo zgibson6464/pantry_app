@@ -14,7 +14,7 @@ app.use(cors());
 app.use("/items", itemRoutes); // Use item routes
 app.use("/user", userRoutes); // Use user routes
 app.use("/cards", cardRoutes); // Use card routes
-app.use("/carts", cartRoutes); // Use cart routes
+app.use("/cart", cartRoutes); // Use cart routes
 
 app.listen(3000, () => {
   console.log("app running");

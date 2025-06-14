@@ -6,6 +6,7 @@ import {
   fetchCart,
   fetchCards,
   updateInCart,
+  updateQuantityChange,
 } from "../api"; // Import API functions
 import "../styles.css"; // Import styles
 
@@ -13,8 +14,12 @@ function Cart() {
   const [cartState, setCartState] = useState([]);
   const [searchTermState, setSearchTermState] = useState([]);
   const [itemState, setItemState] = useState([]);
+  const [cardState, setCardState] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
-  const [pendingQuantities, setPendingQuantities] = useState({});
+  const [cardId, setCardId] = useState("");
+  const [input, setInput] = useState("");
+  const [inputAmount, setInputAmount] = useState("");
+  const [inputType, setInputType] = useState("");
 
   useEffect(() => {
     if (token) {
@@ -49,42 +54,43 @@ function Cart() {
       return;
     }
     try {
-      await addItem(
-        input,
-        inputAmount,
-        inputType,
-        cartId,
-        cardId,
-        true,
-        cartId
-      );
+      await addItem(input, 0, inputType, cardId, true, cartId, inputAmount);
       setInput("");
       setInputAmount("");
       setInputType("");
       setCardId("");
+      const items = await fetchItems();
+      setItemState(items);
+      setSearchTermState(items);
     } catch (error) {
       console.error("Error adding item:", error);
       alert("Failed to add item");
     }
   };
 
-  const handleUpdateQuantity = async (id, change) => {
+  const handleUpdateQuantityChange = async (id, quantityChange) => {
     try {
-      await updateQuantity(id, change);
+      await updateQuantityChange(id, quantityChange);
       const items = await fetchItems();
       setItemState(items);
       setSearchTermState(items);
     } catch (error) {
-      console.error("Error updating quantity:", error);
-      alert("Failed to update quantity");
+      console.error("Error updating quantity change:", error);
+      alert("failed to update quantity change");
     }
   };
 
-  const handleAddPendingQuantity = async (itemId) => {
-    const addValue = parseInt(pendingQuantities[itemId]) || 0;
-    if (addValue > 0) {
-      await handleUpdateQuantity(itemId, addValue);
-      setPendingQuantities((prev) => ({ ...prev, [itemId]: "" }));
+  const confirmQuantityChange = async (id, quantityChange) => {
+    const zeroQuantityChange = -quantityChange;
+    try {
+      await updateQuantity(id, quantityChange);
+      await updateQuantityChange(id, zeroQuantityChange);
+      const items = await fetchItems();
+      setItemState(items);
+      setSearchTermState(items);
+    } catch (error) {
+      console.error("Error confirming quantity change:", error);
+      alert("Failed to confirm quantity change");
     }
   };
 
@@ -107,16 +113,19 @@ function Cart() {
         <h3>{item.title} - </h3>
         <p>Current Quantity: {item.quantity} - </p>
         <p>Type: {item.type} </p>
-        <input
-          type="number"
-          min="0"
-          value={pendingQuantities[item.id] || ""}
-          onChange={(e) => handlePendingQuantityChange(item.id, e.target.value)}
-          placeholder="Add Quantity"
-        />
+        <p>Purchase Quantity: {item.quantityChange}</p>
+        <button onClick={() => handleUpdateQuantityChange(item.id, 1)}>
+          +
+        </button>
+        <button
+          onClick={() => handleUpdateQuantityChange(item.id, -1)}
+          disabled={item.quantityChange <= 0}
+        >
+          -
+        </button>
         <button
           onClick={() => {
-            handleAddPendingQuantity(item.id);
+            confirmQuantityChange(item.id, item.quantityChange);
             handleUpdateCart(item.id, item.inCart);
           }}
         >
@@ -215,6 +224,7 @@ function Cart() {
     <div key={cart.id} className="card">
       <h3>{cart.name}</h3>
       <div className="items">{handleUserItems(cart.id)}</div>
+      <div className="add-item">{handleAddItem(cart.id)}</div>
     </div>
   ));
 
@@ -222,6 +232,24 @@ function Cart() {
     <>
       <div>
         <h1> Shopping Cart </h1>
+        <form className="form">
+          <input placeholder="Search name" onChange={handleSearchName}></input>
+          <select onChange={handleSearchType}>
+            <option value="">All</option>
+            <option value="beverage">Beverage</option>
+            <option value="bread">Bread</option>
+            <option value="cereal">Cereal</option>
+            <option value="condiment">Condiment</option>
+            <option value="dairy">Dairy</option>
+            <option value="dessert">Dessert</option>
+            <option value="fruit">Fruit</option>
+            <option value="grain">Grain</option>
+            <option value="meat">Meat</option>
+            <option value="snack">Snack</option>
+            <option value="spice">Spice</option>
+            <option value="vegetable">Vegetable</option>
+          </select>
+        </form>
         {carts}
       </div>
     </>

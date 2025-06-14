@@ -32,7 +32,8 @@ router.get("/", authenticateToken, async (req, res) => {
 });
 
 router.post("/", authenticateToken, async (req, res) => {
-  const { title, type, quantity, cardId, inCart, cartId } = req.body;
+  const { title, type, quantity, cardId, inCart, cartId, quantityChange } =
+    req.body;
   const userId = req.user.userId;
   const existingItem = await prisma.item.findFirst({
     where: {
@@ -51,12 +52,13 @@ router.post("/", authenticateToken, async (req, res) => {
     const item = await prisma.item.create({
       data: {
         title,
-        quantity: parseInt(quantity) || 1,
+        quantity: parseInt(quantity),
         type,
-        userId: parseInt(userId),
-        cardId: cardId ? parseInt(cardId) : null,
+        cardId: parseInt(cardId),
         inCart: inCart || false,
         cartId: cartId ? parseInt(cartId) : null,
+        quantityChange: quantityChange || 0,
+        userId: parseInt(userId),
       },
     });
     res.json(item);
@@ -66,14 +68,13 @@ router.post("/", authenticateToken, async (req, res) => {
   }
 });
 
-router.put(":/id/quantity", authenticateToken, async (req, res) => {
+router.put("/:id/quantity", authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { quantityChange } = req.body;
+  const { change } = req.body;
   try {
     const item = await prisma.item.update({
       where: { id: parseInt(id) },
-      data: { quantity: { increment: quantityChange } },
-      quantityChange: 0,
+      data: { quantity: { increment: change } },
     });
     res.json(item);
   } catch (error) {
@@ -84,11 +85,11 @@ router.put(":/id/quantity", authenticateToken, async (req, res) => {
 
 router.put("/:id/quantityChange", authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { change, type } = req.body;
+  const { quantityChange } = req.body;
   try {
     const item = await prisma.item.update({
       where: { id: parseInt(id) },
-      data: { quantity: { increment: change }, type },
+      data: { quantityChange: { increment: quantityChange } },
     });
     res.json(item);
   } catch (error) {
