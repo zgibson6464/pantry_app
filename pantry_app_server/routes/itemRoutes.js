@@ -32,7 +32,7 @@ router.get("/", authenticateToken, async (req, res) => {
 });
 
 router.post("/", authenticateToken, async (req, res) => {
-  const { title, type, quantity, cardId, inCart, cartId, quantityChange } =
+  const { title, type, quantity, cardId, inCart, cartId, purchaseQuantity } =
     req.body;
   const userId = req.user.userId;
   const existingItem = await prisma.item.findFirst({
@@ -57,7 +57,7 @@ router.post("/", authenticateToken, async (req, res) => {
         cardId: parseInt(cardId),
         inCart: inCart || false,
         cartId: cartId ? parseInt(cartId) : null,
-        quantityChange: quantityChange || 0,
+        purchaseQuantity: purchaseQuantity || 0,
         userId: parseInt(userId),
       },
     });
@@ -83,13 +83,13 @@ router.put("/:id/quantity", authenticateToken, async (req, res) => {
   }
 });
 
-router.put("/:id/quantityChange", authenticateToken, async (req, res) => {
+router.put("/:id/purchaseQuantity", authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { quantityChange } = req.body;
+  const { purchaseQuantity } = req.body;
   try {
     const item = await prisma.item.update({
       where: { id: parseInt(id) },
-      data: { quantityChange: { increment: quantityChange } },
+      data: { purchaseQuantity: { increment: purchaseQuantity } },
     });
     res.json(item);
   } catch (error) {

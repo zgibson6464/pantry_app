@@ -6,7 +6,7 @@ import {
   fetchCart,
   fetchCards,
   updateInCart,
-  updateQuantityChange,
+  updatePurchaseQuantity,
 } from "../api"; // Import API functions
 import "../styles.css"; // Import styles
 
@@ -68,9 +68,9 @@ function Cart() {
     }
   };
 
-  const handleUpdateQuantityChange = async (id, quantityChange) => {
+  const handleUpdatePurchaseQuantity = async (id, purchaseQuantity) => {
     try {
-      await updateQuantityChange(id, quantityChange);
+      await updatePurchaseQuantity(id, purchaseQuantity);
       const items = await fetchItems();
       setItemState(items);
       setSearchTermState(items);
@@ -80,11 +80,11 @@ function Cart() {
     }
   };
 
-  const confirmQuantityChange = async (id, quantityChange) => {
-    const zeroQuantityChange = -quantityChange;
+  const confirmPurchaseQuantity = async (id, purchaseQuantity) => {
+    const zeroPurchaseQuantity = -purchaseQuantity;
     try {
-      await updateQuantity(id, quantityChange);
-      await updateQuantityChange(id, zeroQuantityChange);
+      await updateQuantity(id, purchaseQuantity);
+      await updatePurchaseQuantity(id, zeroPurchaseQuantity);
       const items = await fetchItems();
       setItemState(items);
       setSearchTermState(items);
@@ -113,19 +113,19 @@ function Cart() {
         <h3>{item.title} - </h3>
         <p>Current Quantity: {item.quantity} - </p>
         <p>Type: {item.type} </p>
-        <p>Purchase Quantity: {item.quantityChange}</p>
-        <button onClick={() => handleUpdateQuantityChange(item.id, 1)}>
+        <p>Purchase Quantity: {item.purchaseQuantity}</p>
+        <button onClick={() => handleUpdatePurchaseQuantity(item.id, 1)}>
           +
         </button>
         <button
-          onClick={() => handleUpdateQuantityChange(item.id, -1)}
-          disabled={item.quantityChange <= 0}
+          onClick={() => handleUpdatePurchaseQuantity(item.id, -1)}
+          disabled={item.purchaseQuantity <= 0}
         >
           -
         </button>
         <button
           onClick={() => {
-            confirmQuantityChange(item.id, item.quantityChange);
+            confirmPurchaseQuantity(item.id, item.purchaseQuantity);
             handleUpdateCart(item.id, item.inCart);
           }}
         >

@@ -37,7 +37,7 @@ export const addItem = async (
   cardId,
   inCart,
   cartId,
-  quantityChange
+  purchaseQuantity
 ) => {
   const token = localStorage.getItem("token");
   await axios.post(
@@ -49,7 +49,7 @@ export const addItem = async (
       cardId,
       inCart: Boolean(inCart),
       cartId: cartId ? parseInt(cartId) : null,
-      quantityChange: parseInt(quantityChange) || 0,
+      purchaseQuantity: parseInt(purchaseQuantity) || 0,
     },
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -68,11 +68,11 @@ export const addCard = async (name) => {
   );
 };
 
-export const updateQuantityChange = async (id, quantityChange) => {
+export const updatePurchaseQuantity = async (id, purchaseQuantity) => {
   const token = localStorage.getItem("token");
   await axios.put(
-    `${HOST}/items/${id}/quantityChange`,
-    { quantityChange },
+    `${HOST}/items/${id}/purchaseQuantity`,
+    { purchaseQuantity },
     {
       headers: { Authorization: `Bearer ${token}` },
     }
