@@ -121,10 +121,7 @@ function Cart() {
           onClick={() => handleUpdatePurchaseQuantity(item.id, -1)}
           disabled={item.purchaseQuantity <= 0}
         >
-          Add to Pantry
-        </button>
-        <button onClick={() => handleUpdateCart(item.id, item.inCart)}>
-          Remove from Cart
+          -
         </button>
         <button
           onClick={() => {
