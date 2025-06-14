@@ -64,6 +64,12 @@ function Pantry() {
       const items = await fetchItems();
       setItemState(items);
       setSearchTermState(items);
+      const zeroQuantityItems = items.filter(
+        (item) => item.quantity <= 0 && !item.inCart
+      );
+      for (const item of zeroQuantityItems) {
+        await handleUpdateCart(item.id, item.inCart);
+      }
     } catch (error) {
       console.error("Error updating quantity:", error);
       alert("Failed to update quantity");
@@ -117,13 +123,13 @@ function Pantry() {
     const userItems = searchTermState.filter((item) => item.cardId === cardId);
     return userItems.map((item) => (
       <div key={item.id} className="item">
-        <h3>{item.title}</h3>
-        <p>Quantity: {item.quantity}</p>
-        <p>Type: {item.type}</p>
+        <h4>{item.title}</h4>
+        <p>{item.quantity} </p>
+        <p>{item.type} </p>
         <button onClick={() => handleUpdateQuantity(item.id, 1)}>+</button>
         <button
           onClick={() => handleUpdateQuantity(item.id, -1)}
-          disabled={item.quantity <= 1}
+          disabled={item.quantity <= 0}
         >
           -
         </button>

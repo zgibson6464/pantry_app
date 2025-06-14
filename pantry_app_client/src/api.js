@@ -35,19 +35,21 @@ export const addItem = async (
   quantity,
   type,
   cardId,
-  inCart = false,
-  cartId = null
+  inCart,
+  cartId,
+  purchaseQuantity
 ) => {
   const token = localStorage.getItem("token");
   await axios.post(
     `${HOST}/items`,
     {
       title,
-      quantity: parseInt(quantity) || 1,
+      quantity: parseInt(quantity),
       type,
       cardId,
-      inCart,
-      cartId,
+      inCart: Boolean(inCart),
+      cartId: cartId ? parseInt(cartId) : null,
+      purchaseQuantity: parseInt(purchaseQuantity) || 0,
     },
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -66,11 +68,33 @@ export const addCard = async (name) => {
   );
 };
 
+export const updatePurchaseQuantity = async (id, purchaseQuantity) => {
+  const token = localStorage.getItem("token");
+  await axios.put(
+    `${HOST}/items/${id}/purchaseQuantity`,
+    { purchaseQuantity },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};
+
 export const updateQuantity = async (id, change) => {
   const token = localStorage.getItem("token");
   await axios.put(
     `${HOST}/items/${id}/quantity`,
     { change },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};
+
+export const updateCard = async (id, cardId) => {
+  const token = localStorage.getItem("token");
+  await axios.put(
+    `${HOST}/items/${id}/card`,
+    { cardId: cardId },
     {
       headers: { Authorization: `Bearer ${token}` },
     }

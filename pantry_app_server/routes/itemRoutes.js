@@ -32,7 +32,8 @@ router.get("/", authenticateToken, async (req, res) => {
 });
 
 router.post("/", authenticateToken, async (req, res) => {
-  const { title, type, quantity, cardId } = req.body;
+  const { title, type, quantity, cardId, inCart, cartId, purchaseQuantity } =
+    req.body;
   const userId = req.user.userId;
   const existingItem = await prisma.item.findFirst({
     where: {
@@ -54,9 +55,12 @@ router.post("/", authenticateToken, async (req, res) => {
     const item = await prisma.item.create({
       data: {
         title,
-        quantity: parseInt(quantity) || 1,
+        quantity: parseInt(quantity),
         type,
         cardId: parseInt(cardId),
+        inCart: inCart || false,
+        cartId: cartId ? parseInt(cartId) : null,
+        purchaseQuantity: purchaseQuantity || 0,
         userId: parseInt(userId),
       },
     });
@@ -69,11 +73,26 @@ router.post("/", authenticateToken, async (req, res) => {
 
 router.put("/:id/quantity", authenticateToken, async (req, res) => {
   const { id } = req.params;
-  const { change, type } = req.body;
+  const { change } = req.body;
   try {
     const item = await prisma.item.update({
       where: { id: parseInt(id) },
-      data: { quantity: { increment: change }, type },
+      data: { quantity: { increment: change } },
+    });
+    res.json(item);
+  } catch (error) {
+    console.error("Error updating item quantity:", error);
+    res.status(500).json({ error: "Failed to update item quantity" });
+  }
+});
+
+router.put("/:id/purchaseQuantity", authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { purchaseQuantity } = req.body;
+  try {
+    const item = await prisma.item.update({
+      where: { id: parseInt(id) },
+      data: { purchaseQuantity: { increment: purchaseQuantity } },
     });
     res.json(item);
   } catch (error) {
@@ -94,6 +113,21 @@ router.put("/:id/inCart", authenticateToken, async (req, res) => {
   } catch (error) {
     console.error("Error updating item inCart status:", error);
     res.status(500).json({ error: "Failed to update item inCart status" });
+  }
+});
+
+router.put("/:id/card", authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { cardId } = req.body;
+  try {
+    const item = await prisma.item.update({
+      where: { id: parseInt(id) },
+      data: { cardId: parseInt(cardId) },
+    });
+    res.json(item);
+  } catch (error) {
+    console.error("Error updating item card:", error);
+    res.status(500).json({ error: "Failed to update item card" });
   }
 });
 

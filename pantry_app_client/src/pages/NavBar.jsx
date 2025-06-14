@@ -21,7 +21,7 @@ export default function Navbar({ setToken }) {
         <Link to="/" className="menu-item">
           <p>Home</p>
         </Link>
-        <Link to="/Cart" className="menu-item">
+        <Link to="/cart" className="menu-item">
           <p>Cart</p>
         </Link>
       </div>

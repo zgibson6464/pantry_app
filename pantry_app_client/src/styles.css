@@ -164,6 +164,10 @@ button:focus-visible {
   padding: 0.25em 0.5em;
   margin: 0.2em;
 }
+.item p {
+  margin: 0.2em;
+  padding: 0.2em;
+}
 
 .item button {
   background-color: #1a1a1a;
@@ -173,7 +177,7 @@ button:focus-visible {
   cursor: pointer;
   padding: 0.25em 1em;
   margin: 0.1em;
-  font-size: small;
+  font-size: 12px;
 }
 .item-button:hover {
   border: #535bf2 1px solid;

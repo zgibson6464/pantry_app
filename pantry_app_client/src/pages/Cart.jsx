@@ -6,20 +6,20 @@ import {
   fetchCart,
   fetchCards,
   updateInCart,
+  updatePurchaseQuantity,
 } from "../api"; // Import API functions
 import "../styles.css"; // Import styles
 
 function Cart() {
   const [cartState, setCartState] = useState([]);
-  const [cardState, setCardState] = useState([]);
   const [searchTermState, setSearchTermState] = useState([]);
-  const [inputAmount, setInputAmount] = useState("");
-  const [inputType, setInputType] = useState("");
   const [itemState, setItemState] = useState([]);
+  const [cardState, setCardState] = useState([]);
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [cardId, setCardId] = useState("");
   const [input, setInput] = useState("");
-  const [token, setToken] = useState(localStorage.getItem("token") || "");
-  const [pendingQuantities, setPendingQuantities] = useState({});
+  const [inputAmount, setInputAmount] = useState("");
+  const [inputType, setInputType] = useState("");
 
   useEffect(() => {
     if (token) {
@@ -54,42 +54,43 @@ function Cart() {
       return;
     }
     try {
-      await addItem(
-        input,
-        inputAmount,
-        inputType,
-        cartId,
-        cardId,
-        true,
-        cartId
-      );
+      await addItem(input, 0, inputType, cardId, true, cartId, inputAmount);
       setInput("");
       setInputAmount("");
       setInputType("");
       setCardId("");
+      const items = await fetchItems();
+      setItemState(items);
+      setSearchTermState(items);
     } catch (error) {
       console.error("Error adding item:", error);
       alert("Failed to add item");
     }
   };
 
-  const handleUpdateQuantity = async (id, change) => {
+  const handleUpdatePurchaseQuantity = async (id, purchaseQuantity) => {
     try {
-      await updateQuantity(id, change);
+      await updatePurchaseQuantity(id, purchaseQuantity);
       const items = await fetchItems();
       setItemState(items);
       setSearchTermState(items);
     } catch (error) {
-      console.error("Error updating quantity:", error);
-      alert("Failed to update quantity");
+      console.error("Error updating quantity change:", error);
+      alert("failed to update quantity change");
     }
   };
 
-  const handleAddPendingQuantity = async (itemId) => {
-    const addValue = parseInt(pendingQuantities[itemId]) || 0;
-    if (addValue > 0) {
-      await handleUpdateQuantity(itemId, addValue);
-      setPendingQuantities((prev) => ({ ...prev, [itemId]: "" }));
+  const confirmPurchaseQuantity = async (id, purchaseQuantity) => {
+    const zeroPurchaseQuantity = -purchaseQuantity;
+    try {
+      await updateQuantity(id, purchaseQuantity);
+      await updatePurchaseQuantity(id, zeroPurchaseQuantity);
+      const items = await fetchItems();
+      setItemState(items);
+      setSearchTermState(items);
+    } catch (error) {
+      console.error("Error confirming quantity change:", error);
+      alert("Failed to confirm quantity change");
     }
   };
 
@@ -106,29 +107,28 @@ function Cart() {
   };
 
   const handleUserItems = () => {
-    const handlePendingQuantityChange = (itemId, value) => {
-      setPendingQuantities((prev) => ({
-        ...prev,
-        [itemId]: value,
-      }));
-    };
-
     const cartItems = searchTermState.filter((item) => item.inCart === true);
     return cartItems.map((item) => (
       <div key={item.id} className="item">
         <h3>{item.title} - </h3>
         <p>Current Quantity: {item.quantity} - </p>
         <p>Type: {item.type} </p>
-        <input
-          type="number"
-          min="0"
-          value={pendingQuantities[item.id] || ""}
-          onChange={(e) => handlePendingQuantityChange(item.id, e.target.value)}
-          placeholder="Add Quantity"
-        />
+        <p>Purchase Quantity: {item.purchaseQuantity}</p>
+        <button onClick={() => handleUpdatePurchaseQuantity(item.id, 1)}>
+          +
+        </button>
+        <button
+          onClick={() => handleUpdatePurchaseQuantity(item.id, -1)}
+          disabled={item.purchaseQuantity <= 0}
+        >
+          Add to Pantry
+        </button>
+        <button onClick={() => handleUpdateCart(item.id, item.inCart)}>
+          Remove from Cart
+        </button>
         <button
           onClick={() => {
-            handleAddPendingQuantity(item.id);
+            confirmPurchaseQuantity(item.id, item.purchaseQuantity);
             handleUpdateCart(item.id, item.inCart);
           }}
         >
@@ -227,7 +227,7 @@ function Cart() {
     <div key={cart.id} className="card">
       <h3>{cart.name}</h3>
       <div className="items">{handleUserItems(cart.id)}</div>
-      {handleAddItem(cart.id)}
+      <div className="add-item">{handleAddItem(cart.id)}</div>
     </div>
   ));
 

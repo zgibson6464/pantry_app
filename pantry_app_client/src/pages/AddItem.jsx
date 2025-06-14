@@ -17,7 +17,7 @@ function AddItem() {
       return;
     }
     try {
-      await addItem(input, inputAmount, inputType, cardId);
+      await addItem(input, inputAmount, inputType, cardId, false, null, 0);
       alert("Item added successfully");
       localStorage.removeItem("selectedCard");
       navigate("/");
