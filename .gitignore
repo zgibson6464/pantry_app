@@ -56,7 +56,6 @@ build/
 .serverless/
 
 # VSCode
-.vscode/
 
 # .env file
 .env

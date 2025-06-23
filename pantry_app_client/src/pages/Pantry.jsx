@@ -141,6 +141,14 @@ function Pantry() {
     ));
   };
 
+  // const handleMoveItem = async (itemId, prevCardId, newCardId) => {
+  //   try {
+  //     await itemState.filter((item) => item.id === itemId.cardId = newCardId;)
+  //     const items = await fetchItems();
+
+  //   }
+  // }
+
   const cards = cardState.map((card) => (
     <div key={card.id} className="card">
       <div className="card-header">{card.name}</div>
