@@ -2,22 +2,12 @@
 // Description: this file contains the routes for item management after being authenticated and submitted under the /item path.
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
-
+import authenticateToken from "./authenticateToken.js"; // Import the authenticateToken function
+import errorMessages from "./errorMessages.js";
+import ItemObject from "./authenticateObject.js";
 const prisma = new PrismaClient();
 const router = express.Router();
-
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  if (token === null) return res.sendStatus(401);
-  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-}
 
 router.get("/", authenticateToken, async (req, res) => {
   try {
@@ -26,29 +16,42 @@ router.get("/", authenticateToken, async (req, res) => {
     });
     res.json(items);
   } catch (error) {
-    console.error("Error fetching items:", error);
-    res.status(500).json({ error: "Failed to fetch items" });
+    return errorMessages.FAILED_TO_FETCH("items", res);
   }
 });
 
 router.post("/", authenticateToken, async (req, res) => {
-  const { title, type, quantity, cardId, inCart, cartId, purchaseQuantity } =
-    req.body;
-  const userId = req.user.userId;
+  const itemData = ItemObject.safeParse({
+    title: req.body.title,
+    type: req.body.type,
+    quantity: req.body.quantity,
+    cardId: req.body.cardId,
+    inCart: req.body.inCart,
+    cartId: req.body.cartId,
+    purchaseQuantity: req.body.purchaseQuantity,
+    userId: req.user.userId,
+  });
+  if (!itemData.success) {
+    return errorMessages.INVALID_INPUT(itemData.error, res);
+  }
+  const {
+    title,
+    type,
+    quantity,
+    cardId,
+    inCart,
+    cartId,
+    purchaseQuantity,
+    userId,
+  } = itemData.data;
   const existingItem = await prisma.item.findFirst({
     where: {
       userId: parseInt(userId),
       title: title,
     },
   });
-
-  if (!title || !type || !cardId) {
-    return res
-      .status(400)
-      .json({ error: "Title and userId and type are required" });
-  }
   if (existingItem) {
-    return res.status(400).json({ error: "Item already exists" });
+    return errorMessages.FAILED_TO_ADD("item already exists", res);
   }
 
   try {
@@ -66,8 +69,7 @@ router.post("/", authenticateToken, async (req, res) => {
     });
     res.json(item);
   } catch (error) {
-    console.error("Error adding item:", error);
-    res.status(500).json({ error: "Failed to add item" });
+    return errorMessages.FAILED_TO_ADD("item", res);
   }
 });
 
@@ -81,8 +83,7 @@ router.put("/:id/quantity", authenticateToken, async (req, res) => {
     });
     res.json(item);
   } catch (error) {
-    console.error("Error updating item quantity:", error);
-    res.status(500).json({ error: "Failed to update item quantity" });
+    return errorMessages.FAILED_TO_UPDATE("Quantity", res);
   }
 });
 
@@ -96,8 +97,7 @@ router.put("/:id/purchaseQuantity", authenticateToken, async (req, res) => {
     });
     res.json(item);
   } catch (error) {
-    console.error("Error updating item quantity:", error);
-    res.status(500).json({ error: "Failed to update item quantity" });
+    return errorMessages.FAILED_TO_UPDATE("Purchase Quantity", res);
   }
 });
 
@@ -111,8 +111,7 @@ router.put("/:id/inCart", authenticateToken, async (req, res) => {
     });
     res.json(item);
   } catch (error) {
-    console.error("Error updating item inCart status:", error);
-    res.status(500).json({ error: "Failed to update item inCart status" });
+    return errorMessages.FAILED_TO_UPDATE("In cart status", res);
   }
 });
 
@@ -126,17 +125,20 @@ router.put("/:id/card", authenticateToken, async (req, res) => {
     });
     res.json(item);
   } catch (error) {
-    console.error("Error updating item card:", error);
-    res.status(500).json({ error: "Failed to update item card" });
+    return errorMessages.FAILED_TO_UPDATE("Item in Pantry", res);
   }
 });
 
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  await prisma.item.delete({
-    where: { id: parseInt(id) },
-  });
-  res.json("item deleted");
+  try {
+    await prisma.item.delete({
+      where: { id: parseInt(id) },
+    });
+    res.json("item deleted");
+  } catch (error) {
+    return errorMessages.FAILED_TO_DELETE("Item", res);
+  }
 });
 
 module.exports = router;

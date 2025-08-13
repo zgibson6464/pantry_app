@@ -59,6 +59,7 @@ function Cart() {
       setInputAmount("");
       setInputType("");
       setCardId("");
+      alert("Item added successfully!");
       const items = await fetchItems();
       setItemState(items);
       setSearchTermState(items);
