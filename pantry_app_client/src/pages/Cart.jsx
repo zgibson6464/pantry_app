@@ -54,7 +54,15 @@ function Cart() {
       return;
     }
     try {
-      await addItem(input, 0, inputType, cardId, true, cartId, inputAmount);
+      await addItem(
+        input,
+        0,
+        inputType,
+        parseInt(cardId),
+        true,
+        parseInt(cartId),
+        parseInt(inputAmount)
+      );
       setInput("");
       setInputAmount("");
       setInputType("");
@@ -65,7 +73,7 @@ function Cart() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error adding item:", error);
-      alert("Failed to add item");
+      alert(error.response.data);
     }
   };
 
@@ -77,7 +85,7 @@ function Cart() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error updating quantity change:", error);
-      alert("failed to update quantity change");
+      alert(error.response.data);
     }
   };
 
@@ -91,7 +99,7 @@ function Cart() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error confirming quantity change:", error);
-      alert("Failed to confirm quantity change");
+      alert(error.response.data);
     }
   };
 
@@ -103,7 +111,7 @@ function Cart() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error updating cart:", error);
-      alert("Failed to update cart");
+      alert(error.response.data);
     }
   };
 
@@ -150,6 +158,7 @@ function Cart() {
       }
     } catch (error) {
       console.error("Error searching items:", error);
+      alert("Failed to search items by type");
     }
   };
 
@@ -166,7 +175,7 @@ function Cart() {
       }
     } catch (error) {
       console.error("Error searching items:", error);
-      alert("Failed to search items");
+      alert("Failed to search items by name");
     }
   };
 

@@ -5,9 +5,8 @@ const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-import UserObject from "./authenticateObject.js";
-import errorMessages from "./errorMessages.js"; // Import error codes for consistent error handling
-
+const { UserObject } = require("./authenticateObject.js");
+const errorMessages = require("./errorMessages.js"); // Import error codes for consistent error handling
 const prisma = new PrismaClient();
 const router = express.Router();
 
@@ -20,7 +19,9 @@ router.post("/register", async (req, res) => {
   });
 
   if (!userData.success) {
-    return errorMessages.INVALID_INPUT(userData.error, res);
+    return res.status(400).json({
+      error: errorMessages.INVALID_INPUT(userData.error),
+    });
   }
 
   const { username, email, password } = userData.data;
@@ -33,7 +34,9 @@ router.post("/register", async (req, res) => {
     });
 
     if (existingUser) {
-      return errorMessages.USER_ALREADY_EXISTS(username, res);
+      return res.status(400).json({
+        error: errorMessages.USER_ALREADY_EXISTS(email),
+      });
     }
 
     const user = await prisma.user.create({
@@ -58,7 +61,9 @@ router.post("/register", async (req, res) => {
     res.json({ message: "Registration successful", token });
   } catch (error) {
     console.error("Registration error:", error);
-    res.status(500).json({ error: "User registration failed" });
+    return res
+      .status(500)
+      .json({ error: errorMessages.USER_REGISTRATION_FAILED() });
   }
 });
 
@@ -70,14 +75,18 @@ router.post("/login", async (req, res) => {
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
-      return errorMessages.USER_NOT_FOUND(email, res);
+      return res
+        .status(404)
+        .json({ error: errorMessages.USER_NOT_FOUND(email) });
     }
 
     // Compare password with hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return errorMessages.INVALID_CREDENTIALS(res);
+      return res
+        .status(401)
+        .json({ error: errorMessages.INVALID_CREDENTIALS() });
     }
 
     //Generate a Json Web Token (JWT)
@@ -86,7 +95,7 @@ router.post("/login", async (req, res) => {
     res.json({ message: "login successful", token });
   } catch (error) {
     console.error("Login error:", error);
-    return errorMessages.USER_LOGIN_FAILED(res);
+    return res.status(500).json({ error: errorMessages.LOGIN_FAILED() });
   }
 });
 

@@ -17,13 +17,20 @@ function AddItem() {
       return;
     }
     try {
-      await addItem(input, inputAmount, inputType, cardId, false, null, 0);
+      await addItem(
+        input,
+        parseInt(inputAmount),
+        inputType,
+        parseInt(cardId),
+        false,
+        null,
+        0
+      );
       alert("Item added successfully");
       localStorage.removeItem("selectedCard");
       navigate("/");
     } catch (error) {
       console.error("Error adding item:", error);
-      alert("Failed to add item");
     }
   };
 

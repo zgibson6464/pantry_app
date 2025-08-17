@@ -44,12 +44,17 @@ function Pantry() {
 
   const addPantry = async (e) => {
     e.preventDefault();
+    if (!inputCard) {
+      alert("Please enter a pantry name");
+      return;
+    }
     try {
       await addCard(inputCard);
       const cards = await fetchCards();
       console.log(cards);
       setCardState(cards);
       setInputCard("");
+      alert("Pantry added successfully!");
     } catch (error) {
       console.error("Error adding card:", error);
       alert("Failed to add card");
@@ -84,7 +89,7 @@ function Pantry() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error updating cart:", error);
-      alert("Failed to update cart");
+      alert("Failed to update in cart");
     }
   };
 
@@ -101,7 +106,7 @@ function Pantry() {
       }
     } catch (error) {
       console.error("Error searching items:", error);
-      alert("Failed to search items");
+      alert("Failed to search items by name");
     }
   };
 
@@ -115,6 +120,7 @@ function Pantry() {
         setSearchTermState(foundItems);
       }
     } catch (error) {
+      alert("Failed to search items by type");
       console.error("Error searching items:", error);
     }
   };
@@ -133,7 +139,11 @@ function Pantry() {
         >
           -
         </button>
-        <button onClick={() => deleteItem(item.id)}>Delete</button>
+        <button
+          onClick={() => deleteItem(item.id, setItemState, setSearchTermState)}
+        >
+          Delete
+        </button>
         <button onClick={() => handleUpdateCart(item.id, item.inCart)}>
           {item.inCart ? "Remove from Cart" : "Add to Cart"}{" "}
         </button>

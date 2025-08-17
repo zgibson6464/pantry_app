@@ -3,9 +3,9 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 require("dotenv").config();
-import authenticateToken from "./authenticateToken.js"; // Import the authenticateToken function
-import errorMessages from "./errorMessages.js";
-import ItemObject from "./authenticateObject.js";
+const authenticateToken = require("./authenticateToken.js");
+const errorMessages = require("./errorMessages.js");
+const { ItemObject } = require("./authenticateObject.js");
 const prisma = new PrismaClient();
 const router = express.Router();
 
@@ -16,7 +16,9 @@ router.get("/", authenticateToken, async (req, res) => {
     });
     res.json(items);
   } catch (error) {
-    return errorMessages.FAILED_TO_FETCH("items", res);
+    return res
+      .status(500)
+      .json({ error: errorMessages.FAILED_TO_FETCH("items") });
   }
 });
 
@@ -32,7 +34,9 @@ router.post("/", authenticateToken, async (req, res) => {
     userId: req.user.userId,
   });
   if (!itemData.success) {
-    return errorMessages.INVALID_INPUT(itemData.error, res);
+    return res
+      .status(400)
+      .json({ error: errorMessages.INVALID_INPUT("item data") });
   }
   const {
     title,
@@ -51,7 +55,9 @@ router.post("/", authenticateToken, async (req, res) => {
     },
   });
   if (existingItem) {
-    return errorMessages.FAILED_TO_ADD("item already exists", res);
+    return res
+      .status(400)
+      .json({ error: errorMessages.ITEM_ALREADY_EXISTS(title) });
   }
 
   try {
@@ -69,7 +75,7 @@ router.post("/", authenticateToken, async (req, res) => {
     });
     res.json(item);
   } catch (error) {
-    return errorMessages.FAILED_TO_ADD("item", res);
+    return res.status(500).json({ error: errorMessages.FAILED_TO_ADD("item") });
   }
 });
 
@@ -83,7 +89,9 @@ router.put("/:id/quantity", authenticateToken, async (req, res) => {
     });
     res.json(item);
   } catch (error) {
-    return errorMessages.FAILED_TO_UPDATE("Quantity", res);
+    return res
+      .status(500)
+      .json({ error: errorMessages.FAILED_TO_UPDATE("Quantity") });
   }
 });
 
@@ -97,7 +105,9 @@ router.put("/:id/purchaseQuantity", authenticateToken, async (req, res) => {
     });
     res.json(item);
   } catch (error) {
-    return errorMessages.FAILED_TO_UPDATE("Purchase Quantity", res);
+    return res
+      .status(500)
+      .json({ error: errorMessages.FAILED_TO_UPDATE("Purchase Quantity") });
   }
 });
 
@@ -111,7 +121,9 @@ router.put("/:id/inCart", authenticateToken, async (req, res) => {
     });
     res.json(item);
   } catch (error) {
-    return errorMessages.FAILED_TO_UPDATE("In cart status", res);
+    return res
+      .status(500)
+      .json({ error: errorMessages.FAILED_TO_UPDATE("In cart status") });
   }
 });
 
@@ -125,7 +137,9 @@ router.put("/:id/card", authenticateToken, async (req, res) => {
     });
     res.json(item);
   } catch (error) {
-    return errorMessages.FAILED_TO_UPDATE("Item in Pantry", res);
+    return res
+      .status(500)
+      .json({ error: errorMessages.FAILED_TO_UPDATE("Item in Pantry") });
   }
 });
 
@@ -137,7 +151,9 @@ router.delete("/:id", async (req, res) => {
     });
     res.json("item deleted");
   } catch (error) {
-    return errorMessages.FAILED_TO_DELETE("Item", res);
+    return res
+      .status(500)
+      .json({ error: errorMessages.FAILED_TO_DELETE("Item") });
   }
 });
 

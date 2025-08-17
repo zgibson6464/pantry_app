@@ -18,13 +18,14 @@ function LoginPage({ setToken }) {
         throw new Error("Invalid login"); // Handle invalid login
       }
       localStorage.setItem("token", token);
-      setToken(setToken); // Store token in localStorage
+      setToken(token); // Store token in localStorage
       alert("Login successful!");
       setEmail(""); // Clear email input
       setPassword(""); // Clear password input
       navigate("/"); // Redirect to the home page or another route
     } catch (error) {
-      alert("Login failed");
+      alert("Login failed. Please check your email and password");
+      console.error("Login error:", error); // Log the error for debugging;
     }
   };
 

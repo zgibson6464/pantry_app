@@ -1,9 +1,9 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 require("dotenv").config();
-import authenticateToken from "./authenticateToken.js"; // Import the authenticateToken function
-import errorMessages from "./errorMessages.js"; // Import error codes for consistent error handling
-import CardObject from "./authenticateObject.js"; // Import the CardObject schema for validation
+const authenticateToken = require("./authenticateToken.js"); // Import the authenticateToken function
+const errorMessages = require("./errorMessages.js"); // Import error codes for consistent error handling
+const { CardObject } = require("./authenticateObject.js"); // Import the CardObject schema for validation
 
 const prisma = new PrismaClient();
 const router = express.Router();

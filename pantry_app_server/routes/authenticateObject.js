@@ -1,23 +1,25 @@
-import * as z from "zod";
+const z = require("zod");
 
-export const CardObject = z.object({
+const CardObject = z.object({
   name: z.string(),
   userId: z.number(),
 });
 
-export const ItemObject = z.object({
+const ItemObject = z.object({
   title: z.string(),
-  type: z.string(),
   quantity: z.number(),
+  type: z.string(),
   cardId: z.number(),
   inCart: z.boolean(),
-  cartId: z.number(),
+  cartId: z.number().nullable(),
   purchaseQuantity: z.number(),
   userId: z.number(),
 });
 
-export const UserObject = z.object({
+const UserObject = z.object({
   username: z.string(),
   password: z.string(),
   email: z.string(),
 });
+
+module.exports = { CardObject, ItemObject, UserObject };

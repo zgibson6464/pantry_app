@@ -18,6 +18,7 @@ function RegisterPage() {
         return; // Handle registration error
       }
       localStorage.setItem("token", token);
+      // setToken(token);
       alert("User registered successfully! Redirecting to Pantry...");
       setUsername("");
       setEmail("");
@@ -25,6 +26,8 @@ function RegisterPage() {
       navigate("/");
     } catch (error) {
       console.error("Registration error:", error);
+      alert("Registration failed. Please try again.");
+      throw error;
     }
   };
 
