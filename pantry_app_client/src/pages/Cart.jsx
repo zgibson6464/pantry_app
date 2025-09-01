@@ -7,8 +7,9 @@ import {
   fetchCards,
   updateInCart,
   updatePurchaseQuantity,
-} from "../api"; // Import API functions
+} from "../api"; // Import API functionsz
 import "../styles.css"; // Import styles
+import { toast } from "react-toastify";
 
 function Cart() {
   const [cartState, setCartState] = useState([]);
@@ -67,13 +68,13 @@ function Cart() {
       setInputAmount("");
       setInputType("");
       setCardId("");
-      alert("Item added successfully!");
+      toast.success("Item added successfully!");
       const items = await fetchItems();
       setItemState(items);
       setSearchTermState(items);
     } catch (error) {
       console.error("Error adding item:", error);
-      alert(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
@@ -85,7 +86,7 @@ function Cart() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error updating quantity change:", error);
-      alert(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
@@ -99,7 +100,7 @@ function Cart() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error confirming quantity change:", error);
-      alert(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
@@ -111,7 +112,7 @@ function Cart() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error updating cart:", error);
-      alert(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
@@ -158,7 +159,7 @@ function Cart() {
       }
     } catch (error) {
       console.error("Error searching items:", error);
-      alert("Failed to search items by type");
+      toast.error("Failed to search items by type");
     }
   };
 
@@ -175,7 +176,7 @@ function Cart() {
       }
     } catch (error) {
       console.error("Error searching items:", error);
-      alert("Failed to search items by name");
+      toast.error("Failed to search items by name");
     }
   };
 
