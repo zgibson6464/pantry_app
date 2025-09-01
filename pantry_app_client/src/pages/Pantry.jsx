@@ -11,6 +11,7 @@ import {
   updateInCart,
 } from "../api"; // Import API functions
 import "../styles.css"; // Import styles
+import { toast } from "react-toastify";
 
 function Pantry() {
   const Navigate = useNavigate();
@@ -19,6 +20,7 @@ function Pantry() {
   const [cardState, setCardState] = useState([]);
   const [inputCard, setInputCard] = useState("");
   const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [alert, setAlert] = useState({ message: "", type: "" });
 
   // utilizes the fetchItems function to get the items from the API and set the itemState when the component mounts
 
@@ -44,15 +46,20 @@ function Pantry() {
 
   const addPantry = async (e) => {
     e.preventDefault();
+    if (!inputCard) {
+      toast.error("Please enter a pantry name");
+      return;
+    }
     try {
       await addCard(inputCard);
       const cards = await fetchCards();
       console.log(cards);
       setCardState(cards);
       setInputCard("");
+      toast.success("Pantry added successfully!");
     } catch (error) {
       console.error("Error adding card:", error);
-      alert("Failed to add card");
+      toast.error("Failed to add card");
     }
   };
 
@@ -72,7 +79,7 @@ function Pantry() {
       }
     } catch (error) {
       console.error("Error updating quantity:", error);
-      alert("Failed to update quantity");
+      toast.error("Failed to update quantity");
     }
   };
 
@@ -84,7 +91,7 @@ function Pantry() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error updating cart:", error);
-      alert("Failed to update cart");
+      toast.error("Failed to update in cart");
     }
   };
 
@@ -101,7 +108,7 @@ function Pantry() {
       }
     } catch (error) {
       console.error("Error searching items:", error);
-      alert("Failed to search items");
+      toast.error("Failed to search items by name");
     }
   };
 
@@ -115,6 +122,7 @@ function Pantry() {
         setSearchTermState(foundItems);
       }
     } catch (error) {
+      toast.error("Failed to search items by type");
       console.error("Error searching items:", error);
     }
   };
@@ -133,13 +141,25 @@ function Pantry() {
         >
           -
         </button>
-        <button onClick={() => deleteItem(item.id)}>Delete</button>
+        <button
+          onClick={() => deleteItem(item.id, setItemState, setSearchTermState)}
+        >
+          Delete
+        </button>
         <button onClick={() => handleUpdateCart(item.id, item.inCart)}>
           {item.inCart ? "Remove from Cart" : "Add to Cart"}{" "}
         </button>
       </div>
     ));
   };
+
+  // const handleMoveItem = async (itemId, prevCardId, newCardId) => {
+  //   try {
+  //     await itemState.filter((item) => item.id === itemId.cardId = newCardId;)
+  //     const items = await fetchItems();
+
+  //   }
+  // }
 
   const cards = cardState.map((card) => (
     <div key={card.id} className="card">

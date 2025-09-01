@@ -1,22 +1,12 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const authenticateToken = require("./authenticateToken.js"); // Import the authenticateToken function
+const errorMessages = require("./errorMessages.js"); // Import error codes for consistent error handling
+const { CardObject } = require("./authenticateObject.js"); // Import the CardObject schema for validation
 
 const prisma = new PrismaClient();
 const router = express.Router();
-
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  if (token === null) return res.sendStatus(401);
-  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
-    if (err) return res.sendStatus(403);
-    console.log("user", user);
-    req.user = user;
-    next();
-  });
-}
 
 // router.get("/",
 router.get("/", authenticateToken, async (req, res) => {
@@ -26,26 +16,22 @@ router.get("/", authenticateToken, async (req, res) => {
     });
     res.json(cards);
   } catch (error) {
-    console.error("Error fetching pantires:", error);
-    res.status(500).json({ error: "Failed to fetch pantries" });
+    errorMessages.FAILED_TO_FETCH("cards", res);
   }
 });
 // router.post("/")
 router.post("/", authenticateToken, async (req, res) => {
-  const { name } = req.body;
-  const userId = req.user.userId;
-  if (!name || !userId) {
-    return res.status(400).json({ error: "Name and userId are required" });
-  }
-
+  const cardData = CardObject.parse({
+    name: req.body.name,
+    userId: req.user.userId,
+  });
   try {
     const card = await prisma.card.create({
-      data: { name, userId: parseInt(userId) },
+      data: { name: cardData.name, userId: cardData.userId },
     });
     res.json(card);
   } catch (error) {
-    console.error("Error adding card:", error);
-    res.status(500).json({ error: "Failed to add card" });
+    return errorMessages.FAILED_TO_ADD("card", res);
   }
 });
 
@@ -61,8 +47,7 @@ router.delete("/:id", async (req, res) => {
     });
     res.json("Pantry deleted");
   } catch (error) {
-    console.error("Error deleting pantry:", error);
-    res.status(500).json({ error: "Failed to delete pantry" });
+    return errorMessages.FAILED_TO_DELETE("card", res);
   }
 });
 

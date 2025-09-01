@@ -7,27 +7,42 @@ const HOST = "http://localhost:3000";
 // Item functionality
 
 export const fetchItems = async () => {
-  const token = localStorage.getItem("token");
-  const response = await axios.get(`${HOST}/items`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return response.data.sort((a, b) => a.id - b.id);
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${HOST}/items`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data.sort((a, b) => a.id - b.id);
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    alert(error.response.data.error);
+  }
 };
 
 export const fetchCards = async () => {
-  const token = localStorage.getItem("token");
-  const response = await axios.get(`${HOST}/cards`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return response.data.sort((a, b) => a.id - b.id);
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${HOST}/cards`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data.sort((a, b) => a.id - b.id);
+  } catch (error) {
+    console.error("Error fetching cards:", error);
+    alert(error.response.data.error);
+  }
 };
 
 export const fetchCart = async () => {
-  const token = localStorage.getItem("token");
-  const response = await axios.get(`${HOST}/cart`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return response.data.sort((a, b) => a.id - b.id);
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${HOST}/cart`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data.sort((a, b) => a.id - b.id);
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    alert(error.response.data.error);
+  }
 };
 
 export const addItem = async (
@@ -39,91 +54,135 @@ export const addItem = async (
   cartId,
   purchaseQuantity
 ) => {
-  const token = localStorage.getItem("token");
-  await axios.post(
-    `${HOST}/items`,
-    {
-      title,
-      quantity: parseInt(quantity),
-      type,
-      cardId,
-      inCart: Boolean(inCart),
-      cartId: cartId ? parseInt(cartId) : null,
-      purchaseQuantity: parseInt(purchaseQuantity) || 0,
-    },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+  try {
+    const token = localStorage.getItem("token");
+    await axios.post(
+      `${HOST}/items`,
+      {
+        title,
+        quantity,
+        type,
+        cardId,
+        inCart: Boolean(inCart),
+        cartId: cartId ? cartId : null,
+        purchaseQuantity: purchaseQuantity || 0,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+  } catch (error) {
+    console.error("Error adding item:", error);
+    alert(error.response.data.error);
+  }
 };
 
 export const addCard = async (name) => {
-  const token = localStorage.getItem("token");
-  await axios.post(
-    `${HOST}/cards`,
-    { name },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+  try {
+    const token = localStorage.getItem("token");
+    await axios.post(
+      `${HOST}/cards`,
+      { name },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+  } catch (error) {
+    console.error("Error adding card:", error);
+    alert(error.response.data.error);
+  }
 };
 
 export const updatePurchaseQuantity = async (id, purchaseQuantity) => {
-  const token = localStorage.getItem("token");
-  await axios.put(
-    `${HOST}/items/${id}/purchaseQuantity`,
-    { purchaseQuantity },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+  try {
+    const token = localStorage.getItem("token");
+    await axios.put(
+      `${HOST}/items/${id}/purchaseQuantity`,
+      { purchaseQuantity },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+  } catch (error) {
+    console.error("Error updating item purchase quantity:", error);
+    alert(error.response.data.error);
+  }
 };
 
 export const updateQuantity = async (id, change) => {
-  const token = localStorage.getItem("token");
-  await axios.put(
-    `${HOST}/items/${id}/quantity`,
-    { change },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+  try {
+    const token = localStorage.getItem("token");
+    await axios.put(
+      `${HOST}/items/${id}/quantity`,
+      { change },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+  } catch (error) {
+    console.error("Error updating item quantity:", error);
+    alert(error.response.data.error);
+  }
 };
 
 export const updateCard = async (id, cardId) => {
-  const token = localStorage.getItem("token");
-  await axios.put(
-    `${HOST}/items/${id}/card`,
-    { cardId: cardId },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+  try {
+    const token = localStorage.getItem("token");
+    await axios.put(
+      `${HOST}/items/${id}/card`,
+      { cardId: cardId },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+  } catch (error) {
+    console.error("Error updating Pantry:", error);
+    alert(error.response.data.error);
+  }
 };
 
 export const updateInCart = async (id, inCart) => {
-  const token = localStorage.getItem("token");
-  await axios.put(
-    `${HOST}/items/${id}/inCart`,
-    { inCart, id },
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
+  try {
+    const token = localStorage.getItem("token");
+    await axios.put(
+      `${HOST}/items/${id}/inCart`,
+      { inCart, id },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+  } catch (error) {
+    console.error("Error updating item:", error);
+    alert(error.response.data.error);
+  }
 };
 
-export const deleteItem = async (id) => {
-  const token = localStorage.getItem("token");
-  await axios.delete(`${HOST}/items/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const deleteItem = async (id, setItemState, setSearchTermState) => {
+  try {
+    const token = localStorage.getItem("token");
+    await axios.delete(`${HOST}/items/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const items = await fetchItems();
+    setItemState(items);
+    setSearchTermState(items);
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    alert(error.response.data.error);
+  }
 };
 
 export const deleteCard = async (id) => {
-  const token = localStorage.getItem("token");
-  await axios.delete(`${HOST}/cards/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  try {
+    const token = localStorage.getItem("token");
+    await axios.delete(`${HOST}/cards/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch (error) {
+    console.error("Error deleting card:", error);
+    alert(error.response.data.error);
+  }
 };
 
+// ================================================================
 // User functionality
 
 export const registerUser = async (username, email, password) => {
@@ -136,6 +195,7 @@ export const registerUser = async (username, email, password) => {
     return response.data.token;
   } catch (error) {
     console.error("Registration error:", error);
+    alert(error.response.data.error);
   }
 };
 
@@ -145,10 +205,13 @@ export const loginUser = async (email, password) => {
       email,
       password,
     });
+    if (!response.data.token) {
+      throw new Error("Invalid login");
+    }
     return response.data.token;
   } catch (error) {
     console.error("Login error:", error);
-    alert("Login failed");
+    alert(error.response.data.error);
   }
 };
 
@@ -158,7 +221,7 @@ export const handleLogout = async ({ setToken }) => {
     setToken("");
     alert("Logged out successfully");
   } catch (error) {
-    console.error("Error loging out:", error);
-    alert("Logout failed");
+    console.error("Error logging out:", error);
+    alert(error.response.data.error);
   }
 };

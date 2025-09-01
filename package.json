@@ -1,0 +1,16 @@
+{
+  "name": "pantry_app",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "@azure/functions": "^4.0.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-toastify": "^11.0.5"
+  },
+  "main": "src/{index.js,functions/*.js}"
+}

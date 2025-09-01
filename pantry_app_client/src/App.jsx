@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Navbar setToken={setToken} />
+        {token && <Navbar setToken={setToken} />}
         <Routes>
           <Route path="/login" element={<LoginPage setToken={setToken} />} />
           <Route path="/register" exact element={<RegisterPage />} />

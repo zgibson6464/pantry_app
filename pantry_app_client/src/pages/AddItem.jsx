@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addItem } from "../api"; // Import the addItem function from your API module
+import { toast } from "react-toastify";
 
 function AddItem() {
   const navigate = useNavigate();
@@ -13,17 +14,25 @@ function AddItem() {
     e.preventDefault();
     console.log("Adding item:", input, inputAmount, inputType, cardId);
     if (!input || !inputAmount || !inputType) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
     try {
-      await addItem(input, inputAmount, inputType, cardId, false, null, 0);
-      alert("Item added successfully");
+      await addItem(
+        input,
+        parseInt(inputAmount),
+        inputType,
+        parseInt(cardId),
+        false,
+        null,
+        0
+      );
+      toast.success("Item added successfully");
       localStorage.removeItem("selectedCard");
       navigate("/");
     } catch (error) {
       console.error("Error adding item:", error);
-      alert("Failed to add item");
+      toast.error("Failed to add item");
     }
   };
 

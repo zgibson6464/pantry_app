@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api"; // Import loginUser function to be used in handleLogin
+import { toast } from "react-toastify";
 
 function LoginPage({ setToken }) {
   const navigate = useNavigate();
@@ -18,13 +19,14 @@ function LoginPage({ setToken }) {
         throw new Error("Invalid login"); // Handle invalid login
       }
       localStorage.setItem("token", token);
-      setToken(setToken); // Store token in localStorage
-      alert("Login successful!");
+      setToken(token); // Store token in localStorage
+      toast.success("Login successful!");
       setEmail(""); // Clear email input
       setPassword(""); // Clear password input
       navigate("/"); // Redirect to the home page or another route
     } catch (error) {
-      alert("Login failed");
+      toast.error("Login failed. Please check your email and password");
+      console.error("Login error:", error); // Log the error for debugging;
     }
   };
 
