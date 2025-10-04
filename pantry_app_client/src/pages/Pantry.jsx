@@ -1,4 +1,5 @@
 // description: this file contains the Pantry component, which displays the user's pantry items, allows adding new items, updating quantities, and deleting items. It uses the fetchItems, addItem, updateQuantity, and deleteItem functions from the API module to interact with the backend.
+import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -20,7 +21,6 @@ function Pantry() {
   const [cardState, setCardState] = useState([]);
   const [inputCard, setInputCard] = useState("");
   const [token, setToken] = useState(localStorage.getItem("token") || "");
-  const [alert, setAlert] = useState({ message: "", type: "" });
 
   // utilizes the fetchItems function to get the items from the API and set the itemState when the component mounts
 
@@ -130,7 +130,7 @@ function Pantry() {
   const handleUserItems = (cardId) => {
     const userItems = searchTermState.filter((item) => item.cardId === cardId);
     return userItems.map((item) => (
-      <div key={item.id} className="item">
+      <div key={item.id} className="dark:bg-gray-800 dark:text-white">
         <h4>{item.title}</h4>
         <p>{item.quantity} </p>
         <p>{item.type} </p>
@@ -162,7 +162,10 @@ function Pantry() {
   // }
 
   const cards = cardState.map((card) => (
-    <div key={card.id} className="card">
+    <div
+      key={card.id}
+      className="bg-white dark:bg-gray-800 dark:text-white p-4 rounded shadow"
+    >
       <div className="card-header">{card.name}</div>
       <div className="items">{handleUserItems(card.id)}</div>
       <button
@@ -221,7 +224,10 @@ function Pantry() {
         />
         <button type="submit">Add Card</button>
       </form>
-      <div className="cards"> {cards} </div>
+      <div className="cards grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {" "}
+        {cards}{" "}
+      </div>
     </>
   );
 }
