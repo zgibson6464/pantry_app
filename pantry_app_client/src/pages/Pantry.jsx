@@ -129,24 +129,28 @@ function Pantry() {
     const userItems = searchTermState.filter((item) => item.cardId === cardId);
     return userItems.map((item) => (
       <div key={item.id} className="item">
-        <h4>{item.title}</h4>
-        <p>{item.quantity} </p>
+        <h3>{item.title}</h3>
+        <p>Qty: {item.quantity} </p>
         <p>{item.type} </p>
-        <button onClick={() => handleUpdateQuantity(item.id, 1)}>+</button>
-        <button
-          onClick={() => handleUpdateQuantity(item.id, -1)}
-          disabled={item.quantity <= 0}
-        >
-          -
-        </button>
-        <button
-          onClick={() => deleteItem(item.id, setItemState, setSearchTermState)}
-        >
-          Delete
-        </button>
-        <button onClick={() => handleUpdateCart(item.id, item.inCart)}>
-          {item.inCart ? "Remove from Cart" : "Add to Cart"}{" "}
-        </button>
+        <div className="item-button-group">
+          <button onClick={() => handleUpdateQuantity(item.id, 1)}>+</button>
+          <button
+            onClick={() => handleUpdateQuantity(item.id, -1)}
+            disabled={item.quantity <= 0}
+          >
+            -
+          </button>
+          <button
+            onClick={() =>
+              deleteItem(item.id, setItemState, setSearchTermState)
+            }
+          >
+            Delete
+          </button>
+          <button onClick={() => handleUpdateCart(item.id, item.inCart)}>
+            {item.inCart ? "Remove from Cart" : "Add to Cart"}{" "}
+          </button>
+        </div>
       </div>
     ));
   };
@@ -194,9 +198,10 @@ function Pantry() {
   return (
     <>
       <form className="form">
+        <p>Search all items: </p>
         <input placeholder="Search name" onChange={handleSearchName}></input>
         <select onChange={handleSearchType}>
-          <option value="">All</option>
+          <option value="">All Types</option>
           <option value="beverage">Beverage</option>
           <option value="bread">Bread</option>
           <option value="cereal">Cereal</option>
@@ -211,6 +216,7 @@ function Pantry() {
           <option value="vegetable">Vegetable</option>
         </select>
       </form>
+      <div className="cards"> {cards} </div>
       <form className="form" onSubmit={addPantry}>
         <input
           placeholder="Enter card name"
@@ -219,7 +225,6 @@ function Pantry() {
         />
         <button type="submit">Add Card</button>
       </form>
-      <div className="cards"> {cards} </div>
     </>
   );
 }
