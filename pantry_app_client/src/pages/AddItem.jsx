@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { addItem } from "../api"; // Import the addItem function from your API module
 
@@ -13,7 +14,7 @@ function AddItem() {
     e.preventDefault();
     console.log("Adding item:", input, inputAmount, inputType, cardId);
     if (!input || !inputAmount || !inputType) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
     try {
@@ -26,11 +27,12 @@ function AddItem() {
         null,
         0
       );
-      alert("Item added successfully");
+      toast.success("Item added successfully");
       localStorage.removeItem("selectedCard");
       navigate("/");
     } catch (error) {
       console.error("Error adding item:", error);
+      toast.error("Failed to add item");
     }
   };
 

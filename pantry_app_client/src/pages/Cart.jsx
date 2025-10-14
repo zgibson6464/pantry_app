@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import {
   fetchItems,
   addItem,
@@ -50,7 +51,7 @@ function Cart() {
     e.preventDefault();
     console.log("Adding item:", input, inputAmount, inputType, cardId);
     if (!input || !inputAmount || !inputType || !cardId) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
     try {
@@ -67,13 +68,13 @@ function Cart() {
       setInputAmount("");
       setInputType("");
       setCardId("");
-      alert("Item added successfully!");
+      toast.success("Item added successfully!");
       const items = await fetchItems();
       setItemState(items);
       setSearchTermState(items);
     } catch (error) {
       console.error("Error adding item:", error);
-      alert(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
@@ -85,7 +86,7 @@ function Cart() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error updating quantity change:", error);
-      alert(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
@@ -99,7 +100,7 @@ function Cart() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error confirming quantity change:", error);
-      alert(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
@@ -111,7 +112,7 @@ function Cart() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error updating cart:", error);
-      alert(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
@@ -158,7 +159,7 @@ function Cart() {
       }
     } catch (error) {
       console.error("Error searching items:", error);
-      alert("Failed to search items by type");
+      toast.error("Failed to search items by type");
     }
   };
 
@@ -175,7 +176,7 @@ function Cart() {
       }
     } catch (error) {
       console.error("Error searching items:", error);
-      alert("Failed to search items by name");
+      toast.error("Failed to search items by name");
     }
   };
 

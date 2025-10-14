@@ -1,6 +1,7 @@
 // description: this file contains the Pantry component, which displays the user's pantry items, allows adding new items, updating quantities, and deleting items. It uses the fetchItems, addItem, updateQuantity, and deleteItem functions from the API module to interact with the backend.
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   fetchItems,
   updateQuantity,
@@ -10,7 +11,7 @@ import {
   deleteCard,
   updateInCart,
 } from "../api"; // Import API functions
-import "../styles.css"; // Import styles
+import "../styles.css";
 
 function Pantry() {
   const Navigate = useNavigate();
@@ -45,7 +46,7 @@ function Pantry() {
   const addPantry = async (e) => {
     e.preventDefault();
     if (!inputCard) {
-      alert("Please enter a pantry name");
+      toast.error("Please enter a pantry name");
       return;
     }
     try {
@@ -54,10 +55,10 @@ function Pantry() {
       console.log(cards);
       setCardState(cards);
       setInputCard("");
-      alert("Pantry added successfully!");
+      toast.success("Pantry added successfully!");
     } catch (error) {
       console.error("Error adding card:", error);
-      alert("Failed to add card");
+      toast.error("Failed to add card");
     }
   };
 
@@ -77,7 +78,7 @@ function Pantry() {
       }
     } catch (error) {
       console.error("Error updating quantity:", error);
-      alert("Failed to update quantity");
+      toast.error("Failed to update quantity");
     }
   };
 
@@ -89,7 +90,7 @@ function Pantry() {
       setSearchTermState(items);
     } catch (error) {
       console.error("Error updating cart:", error);
-      alert("Failed to update in cart");
+      toast.error("Failed to update in cart");
     }
   };
 
@@ -106,7 +107,7 @@ function Pantry() {
       }
     } catch (error) {
       console.error("Error searching items:", error);
-      alert("Failed to search items by name");
+      toast.error("Failed to search items by name");
     }
   };
 
@@ -120,7 +121,7 @@ function Pantry() {
         setSearchTermState(foundItems);
       }
     } catch (error) {
-      alert("Failed to search items by type");
+      toast.error("Failed to search items by type");
       console.error("Error searching items:", error);
     }
   };

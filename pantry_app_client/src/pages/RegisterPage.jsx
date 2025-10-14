@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../api"; // Import registerUser function
+import { toast } from "react-toastify";
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -14,18 +15,18 @@ function RegisterPage() {
     try {
       const token = await registerUser(username, email, password);
       if (!token) {
-        alert("Registration failed. Please try again.");
+        toast.error("Registration failed. Please try again.");
         return; // Handle registration error
       }
       localStorage.setItem("token", token);
-      alert("User registered successfully! Redirecting to Pantry...");
+      toast.success("User registered successfully! Redirecting to Pantry...");
       setUsername("");
       setEmail("");
       setPassword("");
       navigate("/");
     } catch (error) {
       console.error("Registration error:", error);
-      alert("Registration failed. Please try again.");
+      toast.error("Registration failed. Please try again.");
       throw error;
     }
   };
