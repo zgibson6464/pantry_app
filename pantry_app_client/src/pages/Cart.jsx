@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import React from "react";
 import { toast } from "react-toastify";
 import {
   fetchItems,
@@ -8,9 +9,8 @@ import {
   fetchCards,
   updateInCart,
   updatePurchaseQuantity,
-} from "../api"; // Import API functionsz
+} from "../api"; // Import API functions
 import "../styles.css"; // Import styles
-import { toast } from "react-toastify";
 
 function Cart() {
   const [cartState, setCartState] = useState([]);

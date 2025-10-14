@@ -1,6 +1,7 @@
 // File: api.js
 // Description: This file contains the API functions for user registration, login, and item management in the pantry app connecting the client to the server using axios.
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const HOST = "http://localhost:3000";
 
@@ -15,7 +16,7 @@ export const fetchItems = async () => {
     return response.data.sort((a, b) => a.id - b.id);
   } catch (error) {
     console.error("Error fetching items:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -28,7 +29,7 @@ export const fetchCards = async () => {
     return response.data.sort((a, b) => a.id - b.id);
   } catch (error) {
     console.error("Error fetching cards:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -41,7 +42,7 @@ export const fetchCart = async () => {
     return response.data.sort((a, b) => a.id - b.id);
   } catch (error) {
     console.error("Error fetching cart:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -73,7 +74,7 @@ export const addItem = async (
     );
   } catch (error) {
     console.error("Error adding item:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -89,7 +90,7 @@ export const addCard = async (name) => {
     );
   } catch (error) {
     console.error("Error adding card:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -105,7 +106,7 @@ export const updatePurchaseQuantity = async (id, purchaseQuantity) => {
     );
   } catch (error) {
     console.error("Error updating item purchase quantity:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -121,7 +122,7 @@ export const updateQuantity = async (id, change) => {
     );
   } catch (error) {
     console.error("Error updating item quantity:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -137,7 +138,7 @@ export const updateCard = async (id, cardId) => {
     );
   } catch (error) {
     console.error("Error updating Pantry:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -151,7 +152,7 @@ export const updateInCart = async (id, inCart) => {
     );
   } catch (error) {
     console.error("Error updating item:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -166,7 +167,7 @@ export const deleteItem = async (id, setItemState, setSearchTermState) => {
     setSearchTermState(items);
   } catch (error) {
     console.error("Error deleting item:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -178,7 +179,7 @@ export const deleteCard = async (id) => {
     });
   } catch (error) {
     console.error("Error deleting card:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -195,7 +196,7 @@ export const registerUser = async (username, email, password) => {
     return response.data.token;
   } catch (error) {
     console.error("Registration error:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -211,7 +212,7 @@ export const loginUser = async (email, password) => {
     return response.data.token;
   } catch (error) {
     console.error("Login error:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };
 
@@ -219,9 +220,9 @@ export const handleLogout = async ({ setToken }) => {
   try {
     localStorage.removeItem("token");
     setToken("");
-    alert("Logged out successfully");
+    toast.success("Logged out successfully");
   } catch (error) {
     console.error("Error logging out:", error);
-    alert(error.response.data.error);
+    toast.error(error.response.data.error);
   }
 };

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { addItem } from "../api"; // Import the addItem function from your API module
-import { toast } from "react-toastify";
 
 function AddItem() {
   const navigate = useNavigate();
