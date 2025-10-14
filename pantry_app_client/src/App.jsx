@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { ToastContainer } from "react-toastify";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./styles.css";
 import LoginPage from "./pages/LoginPage"; // Import LoginPage component
@@ -24,6 +25,7 @@ function App() {
           <Route path="/Cart" element={<Cart />} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
     </>
   );
 }

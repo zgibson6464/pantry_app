@@ -26,7 +26,7 @@ function LoginPage({ setToken }) {
       navigate("/"); // Redirect to the home page or another route
     } catch (error) {
       toast.error("Login failed. Please check your email and password");
-      console.error("Login error:", error); // Log the error for debugging;
+      console.error("Login error:", error); // Log the error for debugging
     }
   };
 

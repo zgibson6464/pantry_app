@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import {
   fetchItems,
   addItem,
@@ -51,7 +52,7 @@ function Cart() {
     e.preventDefault();
     console.log("Adding item:", input, inputAmount, inputType, cardId);
     if (!input || !inputAmount || !inputType || !cardId) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
     try {
