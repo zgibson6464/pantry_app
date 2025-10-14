@@ -8,8 +8,9 @@ import {
   fetchCards,
   updateInCart,
   updatePurchaseQuantity,
-} from "../api"; // Import API functions
+} from "../api"; // Import API functionsz
 import "../styles.css"; // Import styles
+import { toast } from "react-toastify";
 
 function Cart() {
   const [cartState, setCartState] = useState([]);

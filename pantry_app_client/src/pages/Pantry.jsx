@@ -1,4 +1,5 @@
 // description: this file contains the Pantry component, which displays the user's pantry items, allows adding new items, updating quantities, and deleting items. It uses the fetchItems, addItem, updateQuantity, and deleteItem functions from the API module to interact with the backend.
+import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -165,7 +166,10 @@ function Pantry() {
   // }
 
   const cards = cardState.map((card) => (
-    <div key={card.id} className="card">
+    <div
+      key={card.id}
+      className="bg-white dark:bg-gray-800 dark:text-white p-4 rounded shadow"
+    >
       <div className="card-header">{card.name}</div>
       <div className="items">{handleUserItems(card.id)}</div>
       <button
