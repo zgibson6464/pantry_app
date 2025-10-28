@@ -1,0 +1,20 @@
+node_modules
+# large local dependencies; install inside the image instead.
+
+dist
+# local build output; use the build produced inside the container or copy from the build stage.
+
+build
+# local build output; use the build produced inside the container or copy from the build stage.
+
+.env
+# environment secrets (pass at runtime instead).
+
+.vscode
+# editor settings (not needed in the image).
+
+.git
+# repository metadata (not required in the image).
+
+.DS_Store
+# macOS metadata files. Added for future collaboration with macOS users.
