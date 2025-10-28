@@ -13,7 +13,8 @@ COPY prisma ./prisma/
 RUN npx prisma generate
 
 # Copy the rest of the app
-COPY . .
+COPY server.js ./
+COPY routes ./routes
 
 # Expose the port the Node app runs on
 EXPOSE 3000
