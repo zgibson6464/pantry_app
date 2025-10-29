@@ -20,9 +20,18 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage setToken={setToken} />} />
           <Route path="/register" exact element={<RegisterPage />} />
-          <Route path="/" exact element={<Pantry />} />
-          <Route path="/AddItem" element={<AddItem />} />
-          <Route path="/Cart" element={<Cart />} />
+          <Route
+            path="/"
+            element={token ? <Pantry /> : <LoginPage setToken={setToken} />}
+          />
+          <Route
+            path="/AddItem"
+            element={token ? <AddItem /> : <LoginPage setToken={setToken} />}
+          />
+          <Route
+            path="/Cart"
+            element={token ? <Cart /> : <LoginPage setToken={setToken} />}
+          />
         </Routes>
       </BrowserRouter>
       <ToastContainer position="top-right" autoClose={3000} theme="dark" />
