@@ -66,8 +66,12 @@ function AddItem() {
           <option value="fruit">Fruit</option>
           <option value="grain">Grain</option>
           <option value="meat">Meat</option>
+          <option value="sauce">Sauce</option>
+          <option value="seafood">Seafood</option>
           <option value="snack">Snack</option>
+          <option value="soup">Soup</option>
           <option value="spice">Spice</option>
+          <option value="spirit">Spirit</option>
           <option value="vegetable">Vegetable</option>
         </select>
         <button type="submit">Add Item</button>
