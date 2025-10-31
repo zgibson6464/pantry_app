@@ -4,6 +4,8 @@ FROM node:22-slim
 # Set working directory inside the container
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y openssl
+
 # Copy package.json and install dependencies
 COPY package*.json ./
 RUN npm install
