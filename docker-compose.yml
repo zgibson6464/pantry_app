@@ -24,6 +24,7 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/pantry
       PORT: 3000
+      SECRET_KEY: "amazinglysecretkeythatnobodyknowsandwouldtakealongtimetofindout"
     depends_on:
       - db
     ports:
