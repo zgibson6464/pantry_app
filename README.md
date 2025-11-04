@@ -22,3 +22,9 @@ This command will:
 
 Once all containers are running, you can access the application in your web browser at:
 http:/localhost:80
+
+After the initial "Docker compose up --build -d" command is ran, you may spin up the container using:
+
+```bash
+Docker compose up -d
+```
