@@ -3,7 +3,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const HOST = "http://localhost:3000";
+const HOST = import.meta.env.VITE_API_URL;
 
 // Item functionality
 
