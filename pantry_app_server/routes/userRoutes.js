@@ -1,13 +1,12 @@
 // File: userRoutes.js
 // Description: This file contains the routes for user registration and login after being authenticated and submitted under the /user path.
 const express = require("express");
-const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { UserObject } = require("./authenticateObject.js");
 const errorMessages = require("./errorMessages.js"); // Import error codes for consistent error handling
-const prisma = new PrismaClient();
+const prisma = require("../prisma/client.js"); // Import the Prisma client
 const router = express.Router();
 
 // Register a new user

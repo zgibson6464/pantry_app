@@ -1,12 +1,11 @@
 // File: userRoutes.js
 // Description: this file contains the routes for item management after being authenticated and submitted under the /item path.
 const express = require("express");
-const { PrismaClient } = require("@prisma/client");
 require("dotenv").config();
 const authenticateToken = require("./authenticateToken.js");
 const errorMessages = require("./errorMessages.js");
 const { ItemObject } = require("./authenticateObject.js");
-const prisma = new PrismaClient();
+const prisma = require("../prisma/client.js"); // Import the Prisma client
 const router = express.Router();
 
 router.get("/", authenticateToken, async (req, res) => {
