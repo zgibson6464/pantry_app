@@ -1,0 +1,49 @@
+name: Trigger auto deployment for pantryapp-server
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/pantryapp-server-AutoDeployTrigger-54850c24-d049-4435-8633-e46606d3786a.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:      
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions: 
+      id-token: write #This is required for requesting the OIDC JWT Token
+      contents: read #Required when GH token is used to authenticate with private repo
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.PANTRYAPPSERVER_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.PANTRYAPPSERVER_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.PANTRYAPPSERVER_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }}/pantry_app_server
+          _dockerfilePathKey_: _dockerfilePath_
+          _targetLabelKey_: _targetLabel_
+          registryUrl: pantryapp-ftezc4heducvhcey.azurecr.io
+          registryUsername: ${{ secrets.PANTRYAPPSERVER_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.PANTRYAPPSERVER_REGISTRY_PASSWORD }}
+          containerAppName: pantryapp-server
+          resourceGroup: myresourcegroup
+          imageToBuild: pantryapp-ftezc4heducvhcey.azurecr.io/pantryapp-server:${{ github.sha }}
+          _buildArgumentsKey_: |
+            _buildArgumentsValues_
+
+
