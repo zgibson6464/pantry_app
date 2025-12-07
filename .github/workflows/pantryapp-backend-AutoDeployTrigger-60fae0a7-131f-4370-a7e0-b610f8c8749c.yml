@@ -25,10 +25,6 @@ jobs:
           tenant-id: ${{ secrets.PANTRYAPPBACKEND_AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.PANTRYAPPBACKEND_AZURE_SUBSCRIPTION_ID }}
 
-      - name: Login to ACR
-        run: |
-          az acr login --name pantryapp-ftezc4heducvhcey
-
       - name: Build and Push Backend Image
         run: |
           docker build \
