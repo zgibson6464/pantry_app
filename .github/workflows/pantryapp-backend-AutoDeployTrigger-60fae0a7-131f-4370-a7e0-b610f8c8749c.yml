@@ -10,11 +10,15 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Azure Login
+      - name: Azure Login (OIDC)
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.PANTRYAPPBACKEND_AZURE_CLIENT_ID }}
@@ -25,7 +29,7 @@ jobs:
         run: |
           az acr login --name pantryapp-ftezc4heducvhcey
 
-      - name: Build and Push Backend Image (DOCKER ONLY)
+      - name: Build and Push Backend Image
         run: |
           docker build \
             -f pantry_app_server/Dockerfile \
