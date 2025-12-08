@@ -1,49 +1,48 @@
 name: Trigger auto deployment for pantryapp-frontend
 
-# When this action will be executed
 on:
-  # Automatically trigger it when detected changes in repo
   push:
-    branches: 
-      [ main ]
-    paths:
-    - '**'
-    - '.github/workflows/pantryapp-frontend-AutoDeployTrigger-450d2da8-d910-4a76-b68c-8f7cf4a77b79.yml'
-
-  # Allow manual trigger 
-  workflow_dispatch:      
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    permissions: 
-      id-token: write #This is required for requesting the OIDC JWT Token
-      contents: read #Required when GH token is used to authenticate with private repo
+
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
-      - name: Checkout to the branch
-        uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Azure Login
+      - name: Azure Login (OIDC)
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.PANTRYAPPFRONTEND_AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.PANTRYAPPFRONTEND_AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.PANTRYAPPFRONTEND_AZURE_SUBSCRIPTION_ID }}
 
-      - name: Build and push container image to registry
-        uses: azure/container-apps-deploy-action@v2
-        with:
-          appSourcePath: ${{ github.workspace }}pantry_app_client
-          _dockerfilePathKey_: _dockerfilePath_
-          _targetLabelKey_: _targetLabel_
-          registryUrl: pantryapp-ftezc4heducvhcey.azurecr.io
-          registryUsername: ${{ secrets.PANTRYAPPFRONTEND_REGISTRY_USERNAME }}
-          registryPassword: ${{ secrets.PANTRYAPPFRONTEND_REGISTRY_PASSWORD }}
-          containerAppName: pantryapp-frontend
-          resourceGroup: myresourcegroup
-          imageToBuild: pantryapp-ftezc4heducvhcey.azurecr.io/pantryapp-frontend:${{ github.sha }}
-          _buildArgumentsKey_: |
-            _buildArgumentsValues_
+      - name: Docker Login to ACR
+        run: |
+          echo "${{ secrets.PANTRYAPPFRONTEND_REGISTRY_PASSWORD }}" | docker login pantryapp-ftezc4heducvhcey.azurecr.io \
+            -u "${{ secrets.PANTRYAPPFRONTEND_REGISTRY_USERNAME }}" \
+            --password-stdin
 
+      - name: Build and Push Frontend Image
+        run: |
+          docker build \
+            -f pantry_app_client/Dockerfile \
+            -t pantryapp-ftezc4heducvhcey.azurecr.io/pantryapp-frontend:${{ github.sha }} \
+            ./pantry_app_client
 
+          docker push pantryapp-ftezc4heducvhcey.azurecr.io/pantryapp-frontend:${{ github.sha }}
+
+      - name: Deploy Frontend to Azure Container App
+        run: |
+          az containerapp update \
+            --name pantryapp-frontend \
+            --resource-group myresourcegroup \
+            --image pantryapp-ftezc4heducvhcey.azurecr.io/pantryapp-frontend:${{ github.sha }}
