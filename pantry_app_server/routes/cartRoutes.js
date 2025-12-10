@@ -1,10 +1,9 @@
 const express = require("express");
-const { PrismaClient } = require("@prisma/client");
 require("dotenv").config();
 const authenticateToken = require("./authenticateToken.js"); // Import the authenticateToken function
 const errorMessages = require("./errorMessages.js"); // Import error codes for consistent error handling
 
-const prisma = new PrismaClient();
+const prisma = require("../prisma/client.js"); // Import the Prisma client
 const router = express.Router();
 
 router.get("/", authenticateToken, async (req, res) => {
