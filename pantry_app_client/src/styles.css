@@ -152,6 +152,7 @@ button {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-evenly;
   border: #000000 solid 1px;
   border-radius: 0.2em;
   padding: 0.25em 0.5em;
@@ -160,6 +161,12 @@ button {
 .item p {
   margin: 0.2em;
   padding: 0.2em;
+}
+
+.item-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
 }
 
 .item-button-group {
