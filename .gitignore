@@ -56,6 +56,33 @@ build/
 .serverless/
 
 # VSCode
+.vscode/
+*.code-workspace
 
-# .env file
+# Environment variables
 .env
+.env.local
+.env.*.local
+*.env
+
+# Azure Functions
+local.settings.json
+.funcignore
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+*.tsbuildinfo
+
+# Prisma
+*.db
+*.db-journal
