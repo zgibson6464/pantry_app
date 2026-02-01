@@ -2,6 +2,8 @@
 
 A full-stack web application for managing your pantry inventory, organizing items into categories, and creating shopping lists. Built with React and Node.js, containerized with Docker for easy deployment.
 
+> 📖 **For detailed technical architecture documentation, see [ARCHITECTURE.md](./ARCHITECTURE.md)**
+
 ## 🌐 Live Demo
 
 **Try the application live:** [https://pantryapp-frontend.grayocean-4e308962.westus2.azurecontainerapps.io](https://pantryapp-frontend.grayocean-4e308962.westus2.azurecontainerapps.io)
@@ -13,7 +15,7 @@ The application is deployed on Azure Container Apps and is ready to use. Registe
 - [Live Demo](#-live-demo)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
+- [Architecture](#-architecture)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -62,28 +64,12 @@ The application is deployed on Azure Container Apps and is ready to use. Registe
 
 ## 🏗 Architecture
 
-The application follows a three-tier architecture:
+The application follows a three-tier architecture pattern with a React frontend, Express.js backend, and PostgreSQL database. For detailed architecture documentation, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
-```
-┌─────────────┐
-│   Frontend  │  React SPA (Port 80)
-│   (Nginx)   │
-└──────┬──────┘
-       │
-       │ HTTP/REST API
-       │
-┌──────▼──────┐
-│   Backend   │  Express.js API (Port 3000)
-│   (Node.js) │
-└──────┬──────┘
-       │
-       │ Prisma ORM
-       │
-┌──────▼──────┐
-│  PostgreSQL │  Database (Port 5432)
-│   Database  │
-└─────────────┘
-```
+**Quick Overview:**
+- **Frontend**: React SPA served via Nginx (Port 80)
+- **Backend**: Express.js REST API (Port 3000)
+- **Database**: PostgreSQL with Prisma ORM (Port 5432)
 
 ## 📦 Prerequisites
 
@@ -138,13 +124,7 @@ Before you begin, ensure you have the following installed:
 pantry_app/
 ├── pantry_app_client/          # Frontend React application
 │   ├── src/
-│   │   ├── pages/              # React components
-│   │   │   ├── LoginPage.jsx
-│   │   │   ├── RegisterPage.jsx
-│   │   │   ├── Pantry.jsx
-│   │   │   ├── AddItem.jsx
-│   │   │   ├── Cart.jsx
-│   │   │   └── NavBar.jsx
+│   │   ├── pages/              # React page components
 │   │   ├── api.js              # API client functions
 │   │   ├── App.jsx             # Main app component
 │   │   └── main.jsx            # Entry point
@@ -153,22 +133,17 @@ pantry_app/
 │
 ├── pantry_app_server/          # Backend Express API
 │   ├── routes/                 # API route handlers
-│   │   ├── userRoutes.js
-│   │   ├── itemRoutes.js
-│   │   ├── cardRoutes.js
-│   │   ├── cartRoutes.js
-│   │   ├── authenticateToken.js
-│   │   └── errorMessages.js
-│   ├── prisma/
-│   │   ├── schema.prisma       # Database schema
-│   │   └── migrations/         # Database migrations
+│   ├── prisma/                 # Database schema & migrations
 │   ├── server.js               # Express server entry point
 │   ├── Dockerfile
 │   └── package.json
 │
 ├── docker-compose.yml          # Docker orchestration
-└── README.md
+├── README.md                   # This file
+└── ARCHITECTURE.md             # Detailed architecture documentation
 ```
+
+For a complete project structure breakdown, see [ARCHITECTURE.md](./ARCHITECTURE.md#component-architecture).
 
 ## 🔌 API Endpoints
 
@@ -307,107 +282,14 @@ If ports 80, 3000, or 5432 are already in use:
 
 ## 🚀 Deployment
 
-The application is deployed on **Azure** using a modern containerized architecture with automated CI/CD pipelines.
+The application is deployed on **Azure** using a modern containerized architecture with automated CI/CD pipelines. For detailed deployment architecture and configuration, see [ARCHITECTURE.md](./ARCHITECTURE.md#deployment-architecture).
 
-### Azure Services Used
+### Quick Deployment Info
 
-- **Azure Container Apps** - Hosts both frontend and backend containers
-- **Azure Container Registry (ACR)** - Stores Docker images
-- **Azure Database for PostgreSQL** - Managed PostgreSQL database (or similar)
-- **GitHub Actions** - CI/CD pipeline for automated deployments
-
-### Deployment Architecture
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    GitHub Repository                     │
-│              (Push to main branch)                       │
-└────────────────────┬────────────────────────────────────┘
-                     │
-                     ▼
-┌─────────────────────────────────────────────────────────┐
-│              GitHub Actions Workflows                    │
-│  • Build Docker images                                   │
-│  • Push to Azure Container Registry                      │
-│  • Deploy to Azure Container Apps                        │
-└────────────────────┬────────────────────────────────────┘
-                     │
-         ┌───────────┴───────────┐
-         │                       │
-         ▼                       ▼
-┌─────────────────┐   ┌─────────────────┐
-│  Azure ACR      │   │  Azure ACR      │
-│  (Frontend)     │   │  (Backend)      │
-└────────┬────────┘   └────────┬────────┘
-         │                     │
-         └───────────┬─────────┘
-                     │
-         ┌───────────┴───────────┐
-         │                       │
-         ▼                       ▼
-┌─────────────────┐   ┌─────────────────┐
-│ Container App   │   │ Container App   │
-│ (Frontend)      │   │ (Backend)       │
-│ Port 80         │   │ Port 3000       │
-└────────┬────────┘   └────────┬────────┘
-         │                     │
-         │  HTTP/REST API       │
-         └──────────┬──────────┘
-                    │
-                    ▼
-         ┌─────────────────────┐
-         │  Azure Database for │
-         │  PostgreSQL         │
-         └─────────────────────┘
-```
-
-### CI/CD Pipeline
-
-The application uses **GitHub Actions** for continuous integration and deployment:
-
-#### Frontend Deployment
-- **Trigger**: Push to `main` branch or manual workflow dispatch
-- **Workflow**: `.github/workflows/pantryapp-frontend-AutoDeployTrigger-*.yml`
-- **Process**:
-  1. Authenticates with Azure using OIDC
-  2. Builds Docker image from `pantry_app_client/Dockerfile`
-  3. Pushes image to Azure Container Registry
-  4. Updates Azure Container App with new image
-
-#### Backend Deployment
-- **Trigger**: Push to `main` branch or manual workflow dispatch
-- **Workflow**: `.github/workflows/pantryapp-backend-AutoDeployTrigger-*.yml`
-- **Process**:
-  1. Authenticates with Azure using OIDC
-  2. Builds Docker image from `pantry_app_server/Dockerfile`
-  3. Runs Prisma migrations automatically on container startup
-  4. Pushes image to Azure Container Registry
-  5. Updates Azure Container App with new image
-
-### Deployment Configuration
-
-#### Resource Group
-- **Name**: `your-resource-group-name` (configure in Azure)
-- **Region**: `your-preferred-region` (e.g., East US, West Europe)
-
-#### Container Apps
-- **Frontend**: `your-frontend-app-name` (configure in Azure)
-- **Backend**: `your-backend-app-name` (configure in Azure)
-
-#### Container Registry
-- **Registry**: `your-registry-name.azurecr.io` (configure in Azure)
-
-### Environment Variables (Production)
-
-The following environment variables are configured in Azure Container Apps:
-
-#### Backend Container App
-- `DATABASE_URL` - PostgreSQL connection string
-- `PORT` - Server port (3000)
-- `SECRET_KEY` - JWT secret key for token signing
-
-#### Frontend Container App
-- `VITE_API_BASE_URL` - Backend API URL
+- **Platform**: Azure Container Apps
+- **CI/CD**: GitHub Actions (automated on push to `main`)
+- **Container Registry**: Azure Container Registry (ACR)
+- **Database**: Azure Database for PostgreSQL
 
 ### Manual Deployment
 
@@ -420,43 +302,28 @@ az login
 # Login to ACR (replace with your registry name)
 az acr login --name your-registry-name
 
-# Build and push frontend (replace with your registry and app names)
+# Build and push frontend
 docker build -f pantry_app_client/Dockerfile -t your-registry-name.azurecr.io/your-frontend-app:latest ./pantry_app_client
 docker push your-registry-name.azurecr.io/your-frontend-app:latest
 
-# Build and push backend (replace with your registry and app names)
+# Build and push backend
 docker build -f pantry_app_server/Dockerfile -t your-registry-name.azurecr.io/your-backend-app:latest ./pantry_app_server
 docker push your-registry-name.azurecr.io/your-backend-app:latest
 
-# Update container apps (replace with your resource group and app names)
+# Update container apps
 az containerapp update --name your-frontend-app --resource-group your-resource-group --image your-registry-name.azurecr.io/your-frontend-app:latest
 az containerapp update --name your-backend-app --resource-group your-resource-group --image your-registry-name.azurecr.io/your-backend-app:latest
 ```
 
-### Monitoring and Logs
+### Viewing Logs
 
-View application logs in Azure Portal:
-- Navigate to your Container App in Azure Portal
-- Go to **Log stream** or **Logs** section
-- Monitor real-time logs and errors
-
-Or use Azure CLI:
 ```bash
-# View frontend logs (replace with your app and resource group names)
+# View frontend logs
 az containerapp logs show --name your-frontend-app --resource-group your-resource-group --follow
 
-# View backend logs (replace with your app and resource group names)
+# View backend logs
 az containerapp logs show --name your-backend-app --resource-group your-resource-group --follow
 ```
-
-### Scaling
-
-Azure Container Apps automatically scales based on:
-- HTTP traffic
-- CPU/Memory usage
-- Custom scaling rules
-
-Configure scaling in Azure Portal under your Container App's **Scale** settings.
 
 ## 📝 License
 
