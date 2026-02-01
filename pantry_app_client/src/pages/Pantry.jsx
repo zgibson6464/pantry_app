@@ -131,9 +131,11 @@ function Pantry() {
     const userItems = searchTermState.filter((item) => item.cardId === cardId);
     return userItems.map((item) => (
       <div key={item.id} className="item">
-        <h3>{item.title}</h3>
-        <p>Qty: {item.quantity} </p>
-        <p>{item.type} </p>
+        <div className="item-info">
+          <span>{item.title}</span>
+          <span>Qty: {item.quantity} </span>
+          <span>{item.type} </span>
+        </div>
         <div className="item-button-group">
           <button onClick={() => handleUpdateQuantity(item.id, 1)}>+</button>
           <button
