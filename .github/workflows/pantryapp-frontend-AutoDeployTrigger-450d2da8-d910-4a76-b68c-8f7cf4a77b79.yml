@@ -27,7 +27,7 @@ jobs:
 
       - name: Docker Login to ACR
         run: |
-          echo "${{ secrets.PANTRYAPPFRONTEND_REGISTRY_PASSWORD }}" | docker login pantryapp-ftezc4heducvhcey.azurecr.io \
+          echo "${{ secrets.PANTRYAPPFRONTEND_REGISTRY_PASSWORD }}" | docker login ${{ secrets.PANTRYAPPFRONTEND_REGISTRY_URL }} \
             -u "${{ secrets.PANTRYAPPFRONTEND_REGISTRY_USERNAME }}" \
             --password-stdin
 
@@ -35,14 +35,14 @@ jobs:
         run: |
           docker build \
             -f pantry_app_client/Dockerfile \
-            -t pantryapp-ftezc4heducvhcey.azurecr.io/pantryapp-frontend:${{ github.sha }} \
+            -t ${{ secrets.PANTRYAPPFRONTEND_REGISTRY_URL }}/pantryapp-frontend:${{ github.sha }} \
             ./pantry_app_client
 
-          docker push pantryapp-ftezc4heducvhcey.azurecr.io/pantryapp-frontend:${{ github.sha }}
+          docker push ${{ secrets.PANTRYAPPFRONTEND_REGISTRY_URL }}/pantryapp-frontend:${{ github.sha }}
 
       - name: Deploy Frontend to Azure Container App
         run: |
           az containerapp update \
-            --name pantryapp-frontend \
-            --resource-group myresourcegroup \
-            --image pantryapp-ftezc4heducvhcey.azurecr.io/pantryapp-frontend:${{ github.sha }}
+            --name ${{ secrets.PANTRYAPPFRONTEND_APP_NAME }} \
+            --resource-group ${{ secrets.PANTRYAPPFRONTEND_RESOURCE_GROUP }} \
+            --image ${{ secrets.PANTRYAPPFRONTEND_REGISTRY_URL }}/pantryapp-frontend:${{ github.sha }}
