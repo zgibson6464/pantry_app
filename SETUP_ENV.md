@@ -58,9 +58,9 @@ For CI/CD to work, you need to add the following secrets in your GitHub reposito
 Add these secrets:
 
 #### Frontend Secrets:
-- `PANTRYAPPFRONTEND_REGISTRY_URL` - Your Azure Container Registry URL (e.g., `pantryapp-ftezc4heducvhcey.azurecr.io`)
-- `PANTRYAPPFRONTEND_APP_NAME` - Your frontend container app name (e.g., `pantryapp-frontend`)
-- `PANTRYAPPFRONTEND_RESOURCE_GROUP` - Your Azure resource group name (e.g., `myresourcegroup`)
+- `PANTRYAPPFRONTEND_REGISTRY_URL` - Your Azure Container Registry URL 
+- `PANTRYAPPFRONTEND_APP_NAME` - Your frontend container app name 
+- `PANTRYAPPFRONTEND_RESOURCE_GROUP` - Your Azure resource group name 
 
 #### Backend Secrets:
 - `PANTRYAPPBACKEND_REGISTRY_URL` - Your Azure Container Registry URL (same as frontend)
